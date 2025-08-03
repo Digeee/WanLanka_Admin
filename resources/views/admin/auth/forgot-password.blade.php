@@ -9,4 +9,5 @@
     <p>{{ session('status') }}</p>
 @endif
 
-<a href="{{ url('admin/login') }}">Remember your password? Login instead</a>
+<a href="{{ route('admin.login') }}">Remember your password? Login instead</a>
+

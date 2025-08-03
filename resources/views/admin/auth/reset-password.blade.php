@@ -5,8 +5,6 @@
 
 <form method="POST" action="{{ url('admin/reset-password') }}">
     @csrf
-    <input type="hidden" name="email" value="{{ $email }}">
-    <input type="hidden" name="otp_token" value="{{ $otp_token }}"> <!-- Ensure OTP token is included -->
     <input type="password" name="password" placeholder="New Password" required>
     <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
     <button type="submit">Reset Password</button>

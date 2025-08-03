@@ -17,25 +17,21 @@ class AuthController extends Controller
     }
 
     // Handle Admin Login
-   public function adminLogin(Request $request) {
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|string',
-    ]);
+    public function adminLogin(Request $request) {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
 
-    // Retrieve the admin by email
-    $admin = Admin::where('email', $request->email)->first();
+        $admin = Admin::where('email', $request->email)->first();
 
-    // Check if the admin exists and if the plain text passwords match
-    if ($admin && $admin->password === $request->password) {  // Plaintext comparison
-        Auth::login($admin);
+        if ($admin && $admin->password === $request->password) {
+            Auth::login($admin);
+            return redirect()->route('admin.dashboard');
+        }
 
-        return redirect()->route('admin.dashboard');  // Redirect to dashboard after successful login
+        return back()->withErrors(['email' => 'Wrong credentials']);
     }
-
-    return back()->withErrors(['email' => 'Wrong credentials']);
-}
-
 
     // Show Forgot Password Form for Admins
     public function showAdminForgotPasswordForm() {
@@ -48,91 +44,78 @@ class AuthController extends Controller
             'email' => 'required|email|exists:admins,email',
         ]);
 
-        // Generate a 6-digit numeric OTP
-        $otp_token = rand(100000, 999999);  // Generates a random 6-digit number
+        $otp_token = rand(100000, 999999);
 
-        // Store OTP in the session for comparison later
-        session(['otp_token' => $otp_token]);
+        // Store email & OTP in session
+        session([
+            'otp_email' => $request->email,
+            'otp_token' => $otp_token
+        ]);
 
-        // Send OTP to admin email directly without storing it in the database
         Mail::to($request->email)->send(new OtpVerificationMail($otp_token));
 
-        return redirect()->route('admin.verify-otp', ['email' => $request->email, 'otp_token' => $otp_token])
-                         ->with('status', 'OTP sent to your email');
+        return redirect()->route('admin.verify-otp')->with('status', 'OTP sent to your email.');
     }
 
-    // Show OTP Verification Form for Admins
-    public function showOtpVerificationForm(Request $request) {
-        return view('admin.auth.verify-otp', [
-            'email' => $request->email,
-            'otp_token' => $request->otp_token
-        ]);
+    // Show OTP Verification Form
+    public function showOtpVerificationForm() {
+        if (!session()->has('otp_email') || !session()->has('otp_token')) {
+            return redirect()->route('admin.forgot-password')->withErrors(['session' => 'Session expired. Please try again.']);
+        }
+
+        return view('admin.auth.verify-otp');
     }
 
-    // Verify OTP and Show Reset Password Form
+    // Verify OTP
     public function verifyOtp(Request $request) {
         $request->validate([
             'otp_token' => 'required|string',
         ]);
 
-        // Retrieve OTP from session
         $sessionOtp = session('otp_token');
 
-        // Compare OTP entered by the user with the OTP stored in the session
         if ($request->otp_token == $sessionOtp) {
-            // If OTP is correct, redirect to the password reset form with the email and OTP
-            return redirect()->route('admin.reset-password-form', [
-                'email' => $request->email,
-                'otp_token' => $request->otp_token
-            ]);
+            // Redirect to reset-password form
+            return redirect()->route('admin.reset-password-form');
         }
 
-        // If OTP is invalid, reload the page with error
         return back()->withErrors(['otp_token' => 'Invalid OTP']);
     }
 
-    // Show Reset Password Form for Admins
-    public function showAdminResetPasswordForm(Request $request) {
-        return view('admin.auth.reset-password', [
-            'email' => $request->email,
-            'otp_token' => $request->otp_token
-        ]);
+    // Show Reset Password Form
+    public function showAdminResetPasswordForm() {
+        if (!session()->has('otp_email')) {
+            return redirect()->route('admin.forgot-password')->withErrors(['session' => 'Session expired.']);
+        }
+
+        return view('admin.auth.reset-password');
     }
 
-    // Reset Password for Admin
+    // Handle Password Reset
     public function adminResetPassword(Request $request) {
-    // Validate the incoming data
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|string|confirmed|min:8',
-        'otp_token' => 'required|string',
-    ]);
+        $request->validate([
+            'password' => 'required|string|confirmed|min:8',
+        ]);
 
-    // Retrieve admin by email
-    $admin = Admin::where('email', $request->email)->first();
+        $email = session('otp_email');
+        $sessionOtp = session('otp_token');
 
-    // Check if the admin exists
-    if (!$admin) {
-        return back()->withErrors(['email' => 'User not found']);
-    }
+        if (!$email || !$sessionOtp) {
+            return redirect()->route('admin.forgot-password')->withErrors(['session' => 'Session expired or invalid.']);
+        }
 
-    // Check if OTP is still valid (it should have been validated earlier)
-    $sessionOtp = session('otp_token');
+        $admin = Admin::where('email', $email)->first();
 
-    if ($sessionOtp) {
-        // Store the password as plain text (no hashing)
-        $admin->password = $request->password; // Directly store the password
+        if (!$admin) {
+            return back()->withErrors(['email' => 'User not found']);
+        }
+
+        $admin->password = $request->password; // Plaintext for now
         $admin->save();
 
-        // Clear OTP from session after successful reset
-        session()->forget('otp_token');
+        // Clear session values
+        session()->forget(['otp_email', 'otp_token']);
 
-        // Redirect to login page with success message
-        return redirect()->route('admin.login')->with('status', 'Password reset successful. You can now log in.');
+        return redirect()->route('admin.login')->with('status', 'Password reset successful. Please log in.');
     }
-
-    // If OTP is missing or invalid
-    return back()->withErrors(['otp_token' => 'Invalid or expired OTP']);
-}
-
 }
