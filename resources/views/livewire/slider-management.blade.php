@@ -1,3 +1,5 @@
+
+@extends('layouts.app')
 <div>
     @if (session()->has('message'))
         <div class="alert alert-success">
