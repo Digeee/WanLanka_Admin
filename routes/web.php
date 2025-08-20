@@ -20,3 +20,6 @@ Route::post('admin/reset-password', [AuthController::class, 'adminResetPassword'
 
 
 Route::get('admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+Route::get('admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
+
