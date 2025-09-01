@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WanLanka - Admin Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>@yield('title', 'WanLanka - Admin Dashboard')</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome@6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #2e8b57;
@@ -23,7 +28,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
@@ -347,6 +352,33 @@
             background: #bd2130;
         }
 
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(46, 139, 87, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(46, 139, 87, 0.1);
+        }
+
         /* Responsive Design */
         @media (max-width: 992px) {
             .sidebar {
@@ -439,6 +471,7 @@
             }
         }
     </style>
+    @yield('styles')
 </head>
 <body>
     <div class="admin-container">
@@ -453,49 +486,55 @@
 
             <ul class="nav-links">
                 <li>
-                    <a href="#" class="active">
+                    <a href="{{ route('admin.dashboard') }}" class="{{ Request::is('admin/dashboard') ? 'active' : '' }}">
                         <i class="fas fa-home"></i>
                         <span class="nav-label">Dashboard</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin.packages.index') }}" class="{{ Request::is('admin/packages*') ? 'active' : '' }}">
                         <i class="fas fa-suitcase"></i>
                         <span class="nav-label">Manage Packages</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin.users.index') }}" class="{{ Request::is('admin/users*') ? 'active' : '' }}">
                         <i class="fas fa-users"></i>
                         <span class="nav-label">Manage Users</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin.guides.index') }}" class="{{ Request::is('admin/guides*') ? 'active' : '' }}">
                         <i class="fas fa-user-check"></i>
                         <span class="nav-label">Manage Guides</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin.places.index') }}" class="{{ Request::is('admin/places*') ? 'active' : '' }}">
                         <i class="fas fa-map-marked-alt"></i>
                         <span class="nav-label">Manage Places</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin.vehicles.index') }}" class="{{ Request::is('admin/vehicles*') ? 'active' : '' }}">
                         <i class="fas fa-car"></i>
                         <span class="nav-label">Manage Vehicles</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin.accommodations.index') }}" class="{{ Request::is('admin/accommodations*') ? 'active' : '' }}">
                         <i class="fas fa-hotel"></i>
                         <span class="nav-label">Accommodations</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#">
+                    <a href="{{ route('admin.bookings.index') }}" class="{{ Request::is('admin/bookings*') ? 'active' : '' }}">
+                        <i class="fas fa-calendar-check"></i>
+                        <span class="nav-label">Bookings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('admin.settings') }}" class="{{ Request::is('admin/settings*') ? 'active' : '' }}">
                         <i class="fas fa-cog"></i>
                         <span class="nav-label">UI Settings</span>
                     </a>
@@ -503,215 +542,39 @@
             </ul>
 
             <div class="logout-area">
-                <button class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span class="logout-text">Logout</span>
-                </button>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span class="logout-text">Logout</span>
+                    </button>
+                </form>
             </div>
         </nav>
 
         <!-- Main Content Area -->
         <main class="main-content">
             <div class="header">
-                <h1 class="page-title">Admin Dashboard</h1>
+                <h1 class="page-title">@yield('title', 'Admin Dashboard')</h1>
                 <div class="user-info">
-                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=2e8b57&color=fff" alt="Admin User">
-                    <span>Admin User</span>
+                    <img src="https://ui-avatars.com/api/?name={{ Auth::user()->name }}&background=2e8b57&color=fff" alt="{{ Auth::user()->name }}">
+                    <span>{{ Auth::user()->name }}</span>
                 </div>
             </div>
 
-            <!-- Dashboard Stats -->
-            <div class="dashboard-cards">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Total Users</div>
-                        <div class="card-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                    </div>
-                    <div class="card-value">1,248</div>
-                    <div class="card-footer">+12% from last month</div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Bookings</div>
-                        <div class="card-icon">
-                            <i class="fas fa-suitcase"></i>
-                        </div>
-                    </div>
-                    <div class="card-value">356</div>
-                    <div class="card-footer">+8% from last month</div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Revenue</div>
-                        <div class="card-icon">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                    </div>
-                    <div class="card-value">$24,582</div>
-                    <div class="card-footer">+15% from last month</div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">Pending Requests</div>
-                        <div class="card-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                    </div>
-                    <div class="card-value">28</div>
-                    <div class="card-footer">-5% from last month</div>
-                </div>
-            </div>
-
-            <!-- Recent Bookings Section -->
-            <div class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Recent Bookings</h2>
-                    <button class="btn btn-primary">View All</button>
-                </div>
-
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Booking ID</th>
-                            <th>Customer</th>
-                            <th>Package</th>
-                            <th>Date</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#WL1258</td>
-                            <td>John Smith</td>
-                            <td>7 Days Cultural Tour</td>
-                            <td>15 Oct 2023</td>
-                            <td>$1,250</td>
-                            <td><span class="status status-active">Confirmed</span></td>
-                            <td>
-                                <button class="action-btn"><i class="fas fa-eye"></i></button>
-                                <button class="action-btn"><i class="fas fa-edit"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#WL1257</td>
-                            <td>Emma Johnson</td>
-                            <td>5 Days Beach Vacation</td>
-                            <td>14 Oct 2023</td>
-                            <td>$980</td>
-                            <td><span class="status status-pending">Pending</span></td>
-                            <td>
-                                <button class="action-btn"><i class="fas fa-eye"></i></button>
-                                <button class="action-btn"><i class="fas fa-edit"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#WL1256</td>
-                            <td>Robert Brown</td>
-                            <td>10 Days Adventure Tour</td>
-                            <td>13 Oct 2023</td>
-                            <td>$1,850</td>
-                            <td><span class="status status-active">Confirmed</span></td>
-                            <td>
-                                <button class="action-btn"><i class="fas fa-eye"></i></button>
-                                <button class="action-btn"><i class="fas fa-edit"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#WL1255</td>
-                            <td>Sarah Williams</td>
-                            <td>3 Days City Tour</td>
-                            <td>12 Oct 2023</td>
-                            <td>$450</td>
-                            <td><span class="status status-active">Confirmed</span></td>
-                            <td>
-                                <button class="action-btn"><i class="fas fa-eye"></i></button>
-                                <button class="action-btn"><i class="fas fa-edit"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Recent Users Section -->
-            <div class="content-section">
-                <div class="section-header">
-                    <h2 class="section-title">Recently Registered Users</h2>
-                    <button class="btn btn-primary">View All</button>
-                </div>
-
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>User ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Registration Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>#USR258</td>
-                            <td>Michael Clark</td>
-                            <td>michael@example.com</td>
-                            <td>14 Oct 2023</td>
-                            <td><span class="status status-active">Active</span></td>
-                            <td>
-                                <button class="action-btn"><i class="fas fa-eye"></i></button>
-                                <button class="action-btn"><i class="fas fa-edit"></i></button>
-                                <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#USR257</td>
-                            <td>Jennifer Adams</td>
-                            <td>jennifer@example.com</td>
-                            <td>13 Oct 2023</td>
-                            <td><span class="status status-active">Active</span></td>
-                            <td>
-                                <button class="action-btn"><i class="fas fa-eye"></i></button>
-                                <button class="action-btn"><i class="fas fa-edit"></i></button>
-                                <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>#USR256</td>
-                            <td>David Wilson</td>
-                            <td>david@example.com</td>
-                            <td>12 Oct 2023</td>
-                            <td><span class="status status-pending">Inactive</span></td>
-                            <td>
-                                <button class="action-btn"><i class="fas fa-eye"></i></button>
-                                <button class="action-btn"><i class="fas fa-edit"></i></button>
-                                <button class="action-btn delete"><i class="fas fa-trash"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <!-- Content section that child views will extend -->
+            @yield('content')
         </main>
     </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         // Simple JavaScript for interactive elements
         document.addEventListener('DOMContentLoaded', function() {
             // Navigation active state
             const navLinks = document.querySelectorAll('.nav-links a');
-
-            navLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                });
-            });
 
             // Card hover effect enhancement
             const cards = document.querySelectorAll('.card');
@@ -725,7 +588,19 @@
                     this.style.transform = 'translateY(0)';
                 });
             });
+
+            // Delete confirmation
+            const deleteButtons = document.querySelectorAll('.action-btn.delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (!confirm('Are you sure you want to delete this item?')) {
+                        e.preventDefault();
+                    }
+                });
+            });
         });
     </script>
+
+    @yield('scripts')
 </body>
 </html>

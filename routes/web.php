@@ -23,3 +23,4 @@ Route::get('admin/dashboard', [AdminDashboardController::class, 'index'])->name(
 Route::get('admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
 
+
