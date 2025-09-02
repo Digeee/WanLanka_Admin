@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\Admin\GuiderController;
 
 // Admin Routes
 Route::get('/', [AuthController::class, 'showAdminLoginForm'])->name('admin.login');  // Route for showing the login form
@@ -24,3 +25,7 @@ Route::get('admin/dashboard', [AdminDashboardController::class, 'index'])->name(
 
 
 
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('guiders', App\Http\Controllers\Admin\GuiderController::class);
+});

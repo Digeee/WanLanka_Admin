@@ -470,17 +470,13 @@
                         <span class="nav-label">Manage Users</span>
                     </a>
                 </li>
+
                 <li>
-                    <a href="#">
-                        <i class="fas fa-user-check"></i>
-                        <span class="nav-label">Manage Guides</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-map-marked-alt"></i>
-                        <span class="nav-label">Manage Places</span>
-                    </a>
+                        <a href="{{ route('admin.guiders.index') }}">
+                            <i class="fas fa-user-check"></i>
+                            <span class="nav-label">Manage Guiders</span>
+                        </a>
+
                 </li>
                 <li>
                     <a href="#">
