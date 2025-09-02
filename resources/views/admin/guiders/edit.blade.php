@@ -1,3 +1,7 @@
+@extends('admin.layouts.master')
+
+@section('content')
+
 
     <div class="container">
         <h1>Edit Guider</h1>
@@ -76,10 +80,38 @@
                 <label for="image">Image</label>
                 @if ($guider->image)
                     <div>
-                        <img src="{{ asset('storage/' . $guider->image) }}" alt="Guider Image" width="100">
+                        <img src="{{ asset($guider->image) }}" alt="Guider Image" width="100">
                     </div>
                 @endif
                 <input type="file" name="image" id="image" class="form-control-file">
+            </div>
+            <div class="form-group">
+                <label for="nic_number">NIC Number</label>
+                <input type="text" name="nic_number" id="nic_number" class="form-control" value="{{ old('nic_number', $guider->nic_number) }}">
+            </div>
+            <div class="form-group">
+                <label for="driving_license_photo">Driving License Photo</label>
+                @if ($guider->driving_license_photo)
+                    <div>
+                        <img src="{{ asset($guider->driving_license_photo) }}" alt="Driving License Photo" width="100">
+                    </div>
+                @endif
+                <input type="file" name="driving_license_photo" id="driving_license_photo" class="form-control-file">
+            </div>
+            <div class="form-group">
+                <label>Vehicle Types</label>
+                <div class="form-check">
+                    <input type="checkbox" name="vehicle_types[]" id="vehicle_bike" value="bike" class="form-check-input" {{ in_array('bike', old('vehicle_types', $guider->vehicle_types ?? [])) ? 'checked' : '' }}>
+                    <label for="vehicle_bike" class="form-check-label">Bike</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" name="vehicle_types[]" id="vehicle_auto" value="auto" class="form-check-input" {{ in_array('auto', old('vehicle_types', $guider->vehicle_types ?? [])) ? 'checked' : '' }}>
+                    <label for="vehicle_auto" class="form-check-label">Auto</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" name="vehicle_types[]" id="vehicle_car" value="car" class="form-check-input" {{ in_array('car', old('vehicle_types', $guider->vehicle_types ?? [])) ? 'checked' : '' }}>
+                    <label for="vehicle_car" class="form-check-label">Car</label>
+                </div>
             </div>
             <div class="form-group">
                 <label for="status">Status</label>
@@ -92,3 +124,4 @@
             <a href="{{ route('admin.guiders.index') }}" class="btn btn-secondary">Cancel</a>
         </form>
     </div>
+@endsection

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,12 +23,16 @@ class Guider extends Model
         'availability',
         'description',
         'image',
+        'nic_number',
+        'driving_license_photo',
+        'vehicle_types',
         'status',
     ];
 
     protected $casts = [
         'languages' => 'array',
         'specializations' => 'array',
+        'vehicle_types' => 'array',
         'availability' => 'boolean',
     ];
 }

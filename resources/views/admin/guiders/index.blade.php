@@ -1,4 +1,8 @@
 
+@extends('admin.layouts.master')
+
+@section('content')
+
     <div class="container">
         <h1>Guiders</h1>
         <a href="{{ route('admin.guiders.create') }}" class="btn btn-primary mb-3">Add New Guider</a>
@@ -17,6 +21,8 @@
                     <th>Email</th>
                     <th>Phone</th>
                     <th>City</th>
+                    <th>NIC Number</th>
+                    <th>Vehicle Types</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -29,6 +35,8 @@
                         <td>{{ $guider->email }}</td>
                         <td>{{ $guider->phone ?? 'N/A' }}</td>
                         <td>{{ $guider->city ?? 'N/A' }}</td>
+                        <td>{{ $guider->nic_number ?? 'N/A' }}</td>
+                        <td>{{ $guider->vehicle_types ? implode(', ', $guider->vehicle_types) : 'N/A' }}</td>
                         <td>{{ $guider->status }}</td>
                         <td>
                             <a href="{{ route('admin.guiders.show', $guider) }}" class="btn btn-info btn-sm">View</a>
@@ -42,11 +50,12 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="7">No guiders found.</td>
+                        <td colspan="9">No guiders found.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
 
-        {{ $guiders->links() }} <!-- Pagination links -->
+        {{ $guiders->links() }}
     </div>
+@endsection

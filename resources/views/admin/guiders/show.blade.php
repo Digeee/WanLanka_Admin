@@ -1,4 +1,6 @@
 
+    @extends('admin.layouts.master')
+@section('content')
     <div class="container">
         <h1>Guider Details</h1>
 
@@ -15,12 +17,22 @@
                 <p><strong>Hourly Rate:</strong> ${{ $guider->hourly_rate }}</p>
                 <p><strong>Availability:</strong> {{ $guider->availability ? 'Available' : 'Not Available' }}</p>
                 <p><strong>Description:</strong> {{ $guider->description ?? 'N/A' }}</p>
+                <p><strong>NIC Number:</strong> {{ $guider->nic_number ?? 'N/A' }}</p>
+                <p><strong>Vehicle Types:</strong> {{ $guider->vehicle_types ? implode(', ', $guider->vehicle_types) : 'N/A' }}</p>
                 <p><strong>Status:</strong> {{ $guider->status }}</p>
+                <p><strong>Debug Image Path:</strong> {{ $guider->image ?? 'No image path' }}</p>
+                <p><strong>Debug Driving License Photo Path:</strong> {{ $guider->driving_license_photo ?? 'No driving license photo path' }}</p>
                 @if ($guider->image)
                     <p><strong>Image:</strong></p>
-                    <img src="{{ asset('storage/' . $guider->image) }}" alt="Guider Image" width="200">
+                    <img src="{{ asset('storage/' . $guider->image) }}" alt="Guider Image" width="200" onerror="this.src='{{ asset('images/placeholder.jpg') }}';">
                 @else
                     <p><strong>Image:</strong> N/A</p>
+                @endif
+                @if ($guider->driving_license_photo)
+                    <p><strong>Driving License Photo:</strong></p>
+                    <img src="{{ asset('storage/' . $guider->driving_license_photo) }}" alt="Driving License Photo" width="200" onerror="this.src='{{ asset('images/placeholder.jpg') }}';">
+                @else
+                    <p><strong>Driving License Photo:</strong> N/A</p>
                 @endif
             </div>
         </div>
@@ -35,3 +47,4 @@
             <a href="{{ route('admin.guiders.index') }}" class="btn btn-secondary">Back to List</a>
         </div>
     </div>
+@endsection
