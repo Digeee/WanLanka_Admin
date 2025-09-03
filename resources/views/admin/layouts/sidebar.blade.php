@@ -211,11 +211,12 @@
 
         <ul class="nav-links">
             <li>
-                <a href="#" class="active">
-                    <i class="fas fa-home"></i>
-                    <span class="nav-label">Dashboard</span>
-                </a>
-            </li>
+                        <a href="{{ route('admin.dashboard') }}"
+                           class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }} nav-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span class="nav-label">Dashboard</span>
+                        </a>
+                    </li>
             <li>
                 <a href="#">
                     <i class="fas fa-suitcase"></i>
@@ -229,14 +230,16 @@
                 </a>
             </li>
 
-            <li>
-                <a href="{{ route('admin.guiders.index') }}">
+          <li>
+                <a href="{{ route('admin.guiders.index') }}"
+                class="{{ request()->routeIs('admin.guiders.*') ? 'active' : '' }}">
                     <i class="fas fa-user-check"></i>
                     <span class="nav-label">Manage Guiders</span>
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="{{ route('admin.vehicles.index') }}"
+                class="{{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}">
                     <i class="fas fa-car"></i>
                     <span class="nav-label">Manage Vehicles</span>
                 </a>

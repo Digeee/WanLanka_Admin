@@ -1,19 +1,124 @@
-
 @extends('admin.layouts.master')
 
 @section('content')
 
+    <style>
+        body {
+            background: #e0e5ec;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 20px;
+            background: #e0e5ec;
+            box-shadow:  10px 10px 20px #bebebe,
+                        -10px -10px 20px #ffffff;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+            color: #333;
+            text-shadow: 1px 1px 2px #fff;
+        }
+        .btn {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            background: #e0e5ec;
+            box-shadow: 5px 5px 10px #bebebe,
+                        -5px -5px 10px #ffffff;
+            transition: 0.2s ease-in-out;
+            font-weight: 600;
+        }
+        .btn:hover {
+            box-shadow: inset 5px 5px 10px #bebebe,
+                        inset -5px -5px 10px #ffffff;
+        }
+        .btn-primary { color: #007bff; }
+        .btn-info { color: #17a2b8; }
+        .btn-warning { color: #ffc107; }
+        .btn-danger { color: #dc3545; }
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        .alert {
+            border-radius: 12px;
+            padding: 15px;
+            background: #e0e5ec;
+            box-shadow: inset 5px 5px 10px #bebebe,
+                        inset -5px -5px 10px #ffffff;
+            color: green;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            border-radius: 15px;
+            overflow: hidden;
+            background: #e0e5ec;
+            box-shadow:  8px 8px 16px #bebebe,
+                        -8px -8px 16px #ffffff;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        thead {
+            background: #e0e5ec;
+            box-shadow: inset 2px 2px 5px #bebebe,
+                        inset -2px -2px 5px #ffffff;
+        }
+        th {
+            font-weight: 600;
+            color: #444;
+        }
+        tr {
+            transition: 0.2s;
+        }
+        tr:hover {
+            background: #f1f3f6;
+        }
+        td {
+            color: #333;
+        }
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+        .pagination .page-item .page-link {
+            padding: 8px 14px;
+            border-radius: 12px;
+            background: #e0e5ec;
+            box-shadow: 3px 3px 6px #bebebe,
+                        -3px -3px 6px #ffffff;
+            color: #007bff;
+            border: none;
+        }
+        .pagination .page-item.active .page-link {
+            box-shadow: inset 3px 3px 6px #bebebe,
+                        inset -3px -3px 6px #ffffff;
+            font-weight: bold;
+        }
+    </style>
+
     <div class="container">
         <h1>Guiders</h1>
-        <a href="{{ route('admin.guiders.create') }}" class="btn btn-primary mb-3">Add New Guider</a>
+        <a href="{{ route('admin.guiders.create') }}" class="btn btn-primary mb-3">+ Add New Guider</a>
 
         @if (session('success'))
-            <div class="alert alert-success">
+            <div class="alert">
                 {{ session('success') }}
             </div>
         @endif
 
-        <table class="table table-bordered">
+        <table>
             <thead>
                 <tr>
                     <th>ID</th>

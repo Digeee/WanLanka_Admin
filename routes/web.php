@@ -2,8 +2,9 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\Admin\GuiderController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\VehicleController;
 
 // Admin Routes
 Route::get('/', [AuthController::class, 'showAdminLoginForm'])->name('admin.login');  // Route for showing the login form
@@ -20,12 +21,22 @@ Route::get('admin/reset-password-form', [AuthController::class, 'showAdminResetP
 Route::post('admin/reset-password', [AuthController::class, 'adminResetPassword']);
 
 
-Route::get('admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-Route::get('admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+
 
 
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('guiders', GuiderController::class);
+});
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('vehicles', VehicleController::class);
+});
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
 });

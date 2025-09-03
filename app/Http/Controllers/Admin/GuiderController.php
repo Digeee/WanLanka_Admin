@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Guider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GuiderController extends Controller
 {
     public function index()
     {
-        $guiders = \App\Models\Guider::paginate(10);
+        $guiders = Guider::paginate(10);
         return view('admin.guiders.index', compact('guiders'));
     }
 
@@ -44,18 +45,12 @@ class GuiderController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/guiders'), $filename);
-            $data['image'] = 'uploads/guiders/' . $filename;
+            $data['image'] = $request->file('image')->store('guiders', 'public');
         }
 
         // Handle driving license photo upload
         if ($request->hasFile('driving_license_photo')) {
-            $file = $request->file('driving_license_photo');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/guiders'), $filename);
-            $data['driving_license_photo'] = 'uploads/guiders/' . $filename;
+            $data['driving_license_photo'] = $request->file('driving_license_photo')->store('guiders', 'public');
         }
 
         // Convert comma-separated inputs to arrays
@@ -103,26 +98,18 @@ class GuiderController extends Controller
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            // Delete old image if it exists
-            if ($guider->image && file_exists(public_path($guider->image))) {
-                unlink(public_path($guider->image));
+            if ($guider->image && Storage::disk('public')->exists($guider->image)) {
+                Storage::disk('public')->delete($guider->image);
             }
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/guiders'), $filename);
-            $data['image'] = 'uploads/guiders/' . $filename;
+            $data['image'] = $request->file('image')->store('guiders', 'public');
         }
 
         // Handle driving license photo upload
         if ($request->hasFile('driving_license_photo')) {
-            // Delete old driving license photo if it exists
-            if ($guider->driving_license_photo && file_exists(public_path($guider->driving_license_photo))) {
-                unlink(public_path($guider->driving_license_photo));
+            if ($guider->driving_license_photo && Storage::disk('public')->exists($guider->driving_license_photo)) {
+                Storage::disk('public')->delete($guider->driving_license_photo);
             }
-            $file = $request->file('driving_license_photo');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/guiders'), $filename);
-            $data['driving_license_photo'] = 'uploads/guiders/' . $filename;
+            $data['driving_license_photo'] = $request->file('driving_license_photo')->store('guiders', 'public');
         }
 
         // Convert comma-separated inputs to arrays
@@ -142,12 +129,11 @@ class GuiderController extends Controller
 
     public function destroy(Guider $guider)
     {
-        // Delete images if they exist
-        if ($guider->image && file_exists(public_path($guider->image))) {
-            unlink(public_path($guider->image));
+        if ($guider->image && Storage::disk('public')->exists($guider->image)) {
+            Storage::disk('public')->delete($guider->image);
         }
-        if ($guider->driving_license_photo && file_exists(public_path($guider->driving_license_photo))) {
-            unlink(public_path($guider->driving_license_photo));
+        if ($guider->driving_license_photo && Storage::disk('public')->exists($guider->driving_license_photo)) {
+            Storage::disk('public')->delete($guider->driving_license_photo);
         }
         $guider->delete();
         return redirect()->route('admin.guiders.index')->with('success', 'Guider deleted successfully.');
