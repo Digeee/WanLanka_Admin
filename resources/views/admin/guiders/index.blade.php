@@ -4,19 +4,19 @@
 <style>
     /* ====== Design Tokens (Light / Dark) ====== */
     :root{
-        --bg: #f8fafc;              /* surface */
-        --panel: #ffffff;           /* cards */
-        --muted: #64748b;           /* slate-500 */
-        --text: #0f172a;            /* slate-900 */
-        --border: #e2e8f0;          /* slate-200 */
-        --ring: #cbd5e1;            /* slate-300 */
-        --accent: #3b82f6;          /* blue-500 */
-        --accent-2: #22c55e;        /* green-500 */
-        --danger: #ef4444;          /* red-500 */
-        --warning: #f59e0b;         /* amber-500 */
+        --bg: #f8fafc;
+        --panel: #ffffff;
+        --muted: #64748b;
+        --text: #0f172a;
+        --border: #e2e8f0;
+        --ring: #cbd5e1;
+        --accent: #3b82f6;
+        --accent-2: #22c55e;
+        --danger: #ef4444;
+        --warning: #f59e0b;
         --radius: 16px;
-        --shadow-1: 0 10px 20px rgba(2,6,23, .06);
-        --shadow-2: 0 18px 40px rgba(2,6,23, .08);
+        --shadow-1: 0 10px 20px rgba(2,6,23,.06);
+        --shadow-2: 0 18px 40px rgba(2,6,23,.08);
         --glass: blur(10px) saturate(1.05);
     }
     [data-theme="dark"]{
@@ -54,107 +54,132 @@
     .title{ margin:0; font-size:26px; font-weight:800; letter-spacing:.2px; }
     .actions{ display:flex; gap:10px; flex-wrap:wrap; }
 
-    /* ====== Buttons (keep your style; fix shake; visible on light theme) ====== */
+    /* ====== Buttons (gloss, gradient border) ====== */
     .btn{
-        --bg-fill: transparent;
         --fg: var(--text);
         --bd: var(--ring);
+        --fill: color-mix(in oklab, var(--panel), transparent 8%);
+        --shine: linear-gradient(115deg, transparent 0%, rgba(255,255,255,.16) 45%, rgba(255,255,255,.28) 55%, transparent 70%);
 
-        position: relative; isolation: isolate;
-        appearance:none; border:1.5px solid transparent; cursor:pointer;
+        position: relative; isolation:isolate;
+        appearance:none; cursor:pointer;
         font-weight:800; letter-spacing:.3px; font-size:14px;
         border-radius:999px; padding:10px 16px;
-        color: var(--fg);
-
-        /* gradient border trick */
-        background:
-          linear-gradient(var(--bg-fill), var(--bg-fill)) padding-box,
-          linear-gradient(135deg, var(--bd), color-mix(in oklab, var(--bd), #000 12%)) border-box;
-
-        box-shadow: var(--shadow-1);
-        transition: transform .06s ease, box-shadow .25s ease, background .25s ease, color .25s ease, border-color .25s ease;
         text-decoration:none; display:inline-flex; align-items:center; gap:8px;
 
-        /* >>> fixes the "big shine image" + jitter */
-        overflow: hidden;               /* clip the shine inside the button */
-        backface-visibility: hidden;    /* avoid subpixel wobble */
-        transform: translateZ(0);       /* force its own layer */
-    }
-    /* Shine sweep (clipped + stable) */
-    .btn::before{
-        content:"";
-        position:absolute; inset:0;               /* was -1px; keep inside to prevent bleed */
-        border-radius: inherit;
-        background: linear-gradient(115deg,
-                    transparent 0%,
-                    rgba(255,255,255,.16) 45%,
-                    rgba(255,255,255,.28) 55%,
-                    transparent 70%);
-        transform: translateX(-120%);
-        transition: transform .6s ease;
-        pointer-events:none;
-        z-index: 0;                                /* no negative z-index leak */
-        opacity: .85;                              /* a bit stronger for light theme visibility */
-    }
-    .btn:hover::before{ transform: translateX(120%); }
-    .btn:hover{ box-shadow: var(--shadow-2); }
-    .btn:active{ transform: translateY(1px); }
-    .btn > *{ position: relative; z-index: 1; }    /* keep label above the shine */
+        /* 1) moving shine  2) inner fill  3) gradient border */
+        background-image:
+          var(--shine),
+          linear-gradient(var(--fill), var(--fill)),
+          linear-gradient(135deg, var(--bd), color-mix(in oklab, var(--bd), #000 12%));
+        background-origin: padding-box, padding-box, border-box;
+        background-clip: padding-box, padding-box, border-box;
+        background-size: 220% 100%, 100% 100%, 100% 100%;
+        background-position: -120% 0, 0 0, 0 0;
 
-    /* Primary: gradient border that fills on hover */
+        border:1.5px solid transparent;
+        color: var(--fg);
+        box-shadow: var(--shadow-1);
+        transition:
+          background-position .6s ease,
+          box-shadow .25s ease,
+          color .25s ease,
+          border-color .25s ease;
+        overflow:hidden;                  /* clip shine */
+        backface-visibility:hidden; transform:translateZ(0);
+    }
+    .btn:hover{
+        background-position: 120% 0, 0 0, 0 0;    /* sweep shine */
+        box-shadow: var(--shadow-2);
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn:focus-visible{
+        outline:none;
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 60%), var(--shadow-2);
+    }
+
+    /* Dark theme tuning: reduce glare & boost contrast */
+    [data-theme="dark"] .btn{
+        --shine: linear-gradient(115deg, transparent 0%, rgba(255,255,255,.08) 45%, rgba(255,255,255,.14) 55%, transparent 70%);
+        --fill: color-mix(in oklab, var(--panel), transparent 12%);
+        color: color-mix(in oklab, var(--text), white 12%); /* slightly brighter labels by default */
+    }
+
+    /* --- Primary (Add / Edit / Theme) --- */
     .btn-primary{
-        --fg: color-mix(in oklab, var(--accent), #000 10%);
-        --bd: color-mix(in oklab, var(--accent), #000 10%);
-        --bg-fill: color-mix(in oklab, var(--panel), transparent 0%);
+        /* Light theme default label (darker for readability) */
+        --fg: color-mix(in oklab, var(--accent), #000 35%);
+        --bd: color-mix(in oklab, var(--accent), #000 15%);
+        --fill: color-mix(in oklab, var(--panel), transparent 0%);
     }
     .btn-primary:hover{
-        --bg-fill: linear-gradient(180deg, color-mix(in oklab, var(--accent), #000 10%), var(--accent));
-        color:#fff;
-        text-shadow: 0 1px 0 rgba(0,0,0,.25);
+        color:#fff; text-shadow: 0 1px 0 rgba(0,0,0,.25);
+        background-image:
+          var(--shine),
+          linear-gradient(180deg, color-mix(in oklab, var(--accent), #000 10%), var(--accent)),
+          linear-gradient(135deg, color-mix(in oklab, var(--accent), #000 15%), color-mix(in oklab, var(--accent), #000 26%));
+        border-color: transparent;
+    }
+    /* Primary in DARK: brighter label & border even before hover */
+    [data-theme="dark"] .btn-primary{
+        --fg: color-mix(in oklab, var(--accent), white 45%);
+        --bd: color-mix(in oklab, var(--accent), white 18%);
+        --fill: color-mix(in oklab, var(--panel), transparent 10%);
+    }
+    [data-theme="dark"] .btn-primary:hover{
+        /* keep same hover fill but slightly deeper for dark */
+        background-image:
+          var(--shine),
+          linear-gradient(180deg, color-mix(in oklab, var(--accent), #000 16%), color-mix(in oklab, var(--accent), #000 2%)),
+          linear-gradient(135deg, color-mix(in oklab, var(--accent), #000 26%), color-mix(in oklab, var(--accent), #000 36%));
     }
 
-    /* Danger */
-    .btn-danger{
-        --fg: color-mix(in oklab, var(--danger), #000 10%);
-        --bd: color-mix(in oklab, var(--danger), #000 10%);
-        --bg-fill: color-mix(in oklab, var(--panel), transparent 0%);
-    }
-    .btn-danger:hover{
-        --bg-fill: linear-gradient(180deg, color-mix(in oklab, var(--danger), #000 8%), var(--danger));
-        color:#fff;
-        text-shadow: 0 1px 0 rgba(0,0,0,.25);
-        box-shadow: 0 14px 30px rgba(239,68,68,.35);
-    }
-
-    /* Neutral: frosted pill (Theme) — stronger contrast on white theme */
-    .btn-neutral{
-        --fg: color-mix(in oklab, var(--muted), #000 10%);
-        --bd: var(--ring);
-        --bg-fill: color-mix(in oklab, var(--panel), transparent 10%);
-        backdrop-filter: var(--glass);
-    }
-    .btn-neutral:hover{
-        --bg-fill: color-mix(in oklab, var(--panel), transparent 0%);
-        --fg: var(--text);
-    }
-
-    /* Ghost: keep dashed→solid but fixed width to avoid wobble */
+    /* --- Ghost (unused here, kept for consistency) --- */
     .btn-ghost{
-        --fg: var(--accent);
+        --fg: color-mix(in oklab, var(--accent), #000 15%);
         --bd: color-mix(in oklab, var(--accent), #000 20%);
-        --bg-fill: color-mix(in oklab, var(--panel), transparent 8%);
-        border-style: dashed; border-width: 1.5px;
+        --fill: color-mix(in oklab, var(--panel), transparent 8%);
+        border:1.5px dashed transparent;
     }
     .btn-ghost:hover{
-        border-style: solid; border-width: 1.5px; /* same width => no shift */
-        --bg-fill: color-mix(in oklab, var(--accent), transparent 90%);
+        border-style: solid;
         color: color-mix(in oklab, var(--accent), #000 10%);
+        background-image:
+          var(--shine),
+          linear-gradient(color-mix(in oklab, var(--accent), transparent 92%), color-mix(in oklab, var(--accent), transparent 92%)),
+          linear-gradient(135deg, color-mix(in oklab, var(--accent), #000 20%), color-mix(in oklab, var(--accent), #000 32%));
+    }
+    [data-theme="dark"] .btn-ghost{
+        --fg: color-mix(in oklab, var(--accent), white 40%);
+        --bd: color-mix(in oklab, var(--accent), white 22%);
+        --fill: color-mix(in oklab, var(--panel), transparent 10%);
     }
 
-    /* Focus Ring */
-    .btn:focus-visible{
-        box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 60%), var(--shadow-2);
-        outline: none;
+    /* --- Danger (Delete) --- */
+    .btn-danger{
+        --fg: color-mix(in oklab, var(--danger), #000 25%);
+        --bd: color-mix(in oklab, var(--danger), #000 18%);
+        --fill: color-mix(in oklab, var(--panel), transparent 0%);
+    }
+    .btn-danger:hover{
+        color:#fff; text-shadow: 0 1px 0 rgba(0,0,0,.25);
+        background-image:
+          var(--shine),
+          linear-gradient(180deg, color-mix(in oklab, var(--danger), #000 8%), var(--danger)),
+          linear-gradient(135deg, color-mix(in oklab, var(--danger), #000 18%), color-mix(in oklab, var(--danger), #000 28%));
+        box-shadow: 0 14px 30px rgba(239,68,68,.35);
+        border-color: transparent;
+    }
+    [data-theme="dark"] .btn-danger{
+        --fg: color-mix(in oklab, var(--danger), white 40%);
+        --bd: color-mix(in oklab, var(--danger), white 22%);
+        --fill: color-mix(in oklab, var(--panel), transparent 10%);
+    }
+    [data-theme="dark"] .btn-danger:hover{
+        background-image:
+          var(--shine),
+          linear-gradient(180deg, color-mix(in oklab, var(--danger), #000 18%), color-mix(in oklab, var(--danger), #000 4%)),
+          linear-gradient(135deg, color-mix(in oklab, var(--danger), #000 28%), color-mix(in oklab, var(--danger), #000 38%));
     }
 
     /* Panel */
@@ -198,7 +223,7 @@
     .chip-active .chip-dot{ background: var(--accent-2); }
     .chip-inactive .chip-dot{ background: var(--warning); }
 
-    /* Pagination (Laravel default classes) */
+    /* Pagination */
     nav .pagination{ display:flex; gap:8px; flex-wrap:wrap; padding:12px 0; }
     .page-item{ list-style:none; }
     .page-link{
@@ -210,27 +235,17 @@
     .page-item.active .page-link{ background: color-mix(in oklab, var(--accent), #000 8%); color:#fff; border-color: color-mix(in oklab, var(--accent), #000 18%); }
     .page-link:hover{ box-shadow: var(--shadow-2); }
 
-    /* Dark header contrast patch */
+    /* Dark header contrast */
     [data-theme="dark"] .page-header{ background: linear-gradient(180deg, #0f172a, #0b1220); border:1px solid var(--ring); }
 
-    /* === Fix: fallback initials contrast in LIGHT theme === */
+    /* Avatar initials visibility (light theme) */
     :root .avatar{
-      background: linear-gradient(
-        135deg,
-        color-mix(in oklab, var(--accent), white 70%),
-        #eef2ff
-      );
+      background: linear-gradient(135deg, color-mix(in oklab, var(--accent), white 70%), #eef2ff);
       border-color: #dbeafe;
     }
-    :root .avatar > span{
-      color: #0f172a !important;
-      text-shadow: 0 1px 0 rgba(255,255,255,.55);
-    }
+    :root .avatar > span{ color:#0f172a !important; text-shadow:0 1px 0 rgba(255,255,255,.55); }
     [data-theme="dark"] .avatar{
-      background: linear-gradient(135deg,
-        color-mix(in oklab, var(--accent), transparent 70%),
-        color-mix(in oklab, var(--panel), transparent 30%)
-      );
+      background: linear-gradient(135deg, color-mix(in oklab, var(--accent), transparent 70%), color-mix(in oklab, var(--panel), transparent 30%));
     }
     [data-theme="dark"] .avatar > span{ color:#fff !important; }
 </style>
@@ -244,7 +259,7 @@
             <h1 class="title">Manage Guiders</h1>
         </div>
         <div class="actions">
-            <button class="btn btn-neutral" id="themeToggle" type="button">Theme</button>
+            <button class="btn btn-primary" id="themeToggle" type="button">Theme</button>
             <a href="{{ route('admin.guiders.create') }}" class="btn btn-primary">Add New Guider</a>
         </div>
     </div>
@@ -302,7 +317,7 @@
                             </td>
                             <td>
                                 <div class="actions">
-                                    <a href="{{ route('admin.guiders.show', $guider) }}" class="btn btn-ghost">View</a>
+                                    <a href="{{ route('admin.guiders.show', $guider) }}" class="btn btn-primary">View</a>
                                     <a href="{{ route('admin.guiders.edit', $guider) }}" class="btn btn-primary">Edit</a>
                                     <form action="{{ route('admin.guiders.destroy', $guider) }}" method="POST" style="display:inline;">
                                         @csrf
@@ -326,7 +341,7 @@
 </div>
 
 <script>
-    // Theme toggle (same behavior as detail page)
+    // Theme toggle
     (function(){
         const key = 'ui-theme';
         const root = document.documentElement;
