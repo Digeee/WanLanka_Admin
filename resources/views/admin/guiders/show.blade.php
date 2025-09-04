@@ -155,16 +155,122 @@
 
     /* ====== Actions ====== */
     .actions{ display:flex; flex-wrap:wrap; gap:10px; }
+
+    /* Glossy gradient-border pill buttons with moving shine */
     .btn{
-        appearance:none; border:none; cursor:pointer; font-weight:800; letter-spacing:.3px;
-        border-radius:12px; padding:12px 16px; color:#fff; box-shadow: var(--shadow-1);
-        transition: transform .06s ease, box-shadow .2s ease, opacity .2s ease;
+        --fg: var(--text);
+        --bd: var(--ring);
+        --fill: color-mix(in oklab, var(--panel), transparent 10%);
+        --shine: linear-gradient(115deg, transparent 0%, rgba(255,255,255,.16) 45%, rgba(255,255,255,.28) 55%, transparent 70%);
+
+        position: relative; isolation:isolate;
+        appearance:none; cursor:pointer;
+        font-weight:800; letter-spacing:.3px; font-size:14px;
+        border-radius:999px; padding:12px 18px;
+        text-decoration:none; display:inline-flex; align-items:center; gap:8px;
+
+        /* 1) moving shine  2) inner fill  3) gradient border */
+        background-image:
+          var(--shine),
+          linear-gradient(var(--fill), var(--fill)),
+          linear-gradient(135deg, var(--bd), color-mix(in oklab, var(--bd), #000 12%));
+        background-origin: padding-box, padding-box, border-box;
+        background-clip: padding-box, padding-box, border-box;
+        background-size: 220% 100%, 100% 100%, 100% 100%;
+        background-position: -120% 0, 0 0, 0 0;
+
+        border:1.5px solid transparent;
+        color: var(--fg);
+        box-shadow: var(--shadow-1);
+        transition:
+          background-position .6s ease,
+          box-shadow .25s ease,
+          color .25s ease,
+          border-color .25s ease;
+        overflow:hidden; backface-visibility:hidden; transform:translateZ(0);
+    }
+    .btn:hover{
+        background-position: 120% 0, 0 0, 0 0;    /* sweep shine */
+        box-shadow: var(--shadow-2);
     }
     .btn:active{ transform: translateY(1px); }
-    .btn-primary{ background: linear-gradient(180deg, color-mix(in oklab, var(--accent), #000 8%), var(--accent)); }
-    .btn-danger{ background: linear-gradient(180deg, color-mix(in oklab, var(--danger), #000 8%), var(--danger)); }
-    .btn-neutral{ background: linear-gradient(180deg, color-mix(in oklab, var(--muted), #000 12%), var(--muted)); }
-    .btn:hover{ box-shadow: var(--shadow-2); opacity:.98; }
+    .btn:focus-visible{
+        outline:none;
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 60%), var(--shadow-2);
+    }
+    /* Dark theme – softer shine + brighter labels */
+    [data-theme="dark"] .btn{
+        --shine: linear-gradient(115deg, transparent 0%, rgba(255,255,255,.08) 45%, rgba(255,255,255,.14) 55%, transparent 70%);
+        --fill: color-mix(in oklab, var(--panel), transparent 14%);
+        color: color-mix(in oklab, var(--text), white 14%);
+    }
+
+    /* Variants */
+    .btn-primary{
+        --fg: color-mix(in oklab, var(--accent), #000 35%);
+        --bd: color-mix(in oklab, var(--accent), #000 15%);
+        --fill: color-mix(in oklab, var(--panel), transparent 0%);
+    }
+    .btn-primary:hover{
+        color:#fff; text-shadow: 0 1px 0 rgba(0,0,0,.25);
+        background-image:
+          var(--shine),
+          linear-gradient(180deg, color-mix(in oklab, var(--accent), #000 10%), var(--accent)),
+          linear-gradient(135deg, color-mix(in oklab, var(--accent), #000 15%), color-mix(in oklab, var(--accent), #000 26%));
+        border-color: transparent;
+    }
+    [data-theme="dark"] .btn-primary{
+        --fg: color-mix(in oklab, var(--accent), white 45%);
+        --bd: color-mix(in oklab, var(--accent), white 18%);
+        --fill: color-mix(in oklab, var(--panel), transparent 10%);
+    }
+    [data-theme="dark"] .btn-primary:hover{
+        background-image:
+          var(--shine),
+          linear-gradient(180deg, color-mix(in oklab, var(--accent), #000 16%), color-mix(in oklab, var(--accent), #000 2%)),
+          linear-gradient(135deg, color-mix(in oklab, var(--accent), #000 26%), color-mix(in oklab, var(--accent), #000 36%));
+    }
+
+    .btn-neutral{
+        --fg: color-mix(in oklab, var(--muted), #000 10%);
+        --bd: var(--ring);
+        --fill: color-mix(in oklab, var(--panel), transparent 12%);
+        backdrop-filter: var(--glass);
+    }
+    .btn-neutral:hover{
+        --fill: color-mix(in oklab, var(--panel), transparent 0%);
+        --fg: var(--text);
+    }
+    [data-theme="dark"] .btn-neutral{
+        --fg: color-mix(in oklab, var(--text), white 20%);
+        --fill: color-mix(in oklab, var(--panel), transparent 14%);
+    }
+
+    .btn-danger{
+        --fg: color-mix(in oklab, var(--danger), #000 25%);
+        --bd: color-mix(in oklab, var(--danger), #000 18%);
+        --fill: color-mix(in oklab, var(--panel), transparent 0%);
+    }
+    .btn-danger:hover{
+        color:#fff; text-shadow: 0 1px 0 rgba(0,0,0,.25);
+        background-image:
+          var(--shine),
+          linear-gradient(180deg, color-mix(in oklab, var(--danger), #000 8%), var(--danger)),
+          linear-gradient(135deg, color-mix(in oklab, var(--danger), #000 18%), color-mix(in oklab, var(--danger), #000 28%));
+        box-shadow: 0 14px 30px rgba(239,68,68,.35);
+        border-color: transparent;
+    }
+    [data-theme="dark"] .btn-danger{
+        --fg: color-mix(in oklab, var(--danger), white 40%);
+        --bd: color-mix(in oklab, var(--danger), white 22%);
+        --fill: color-mix(in oklab, var(--panel), transparent 10%);
+    }
+    [data-theme="dark"] .btn-danger:hover{
+        background-image:
+          var(--shine),
+          linear-gradient(180deg, color-mix(in oklab, var(--danger), #000 18%), color-mix(in oklab, var(--danger), #000 4%)),
+          linear-gradient(135deg, color-mix(in oklab, var(--danger), #000 28%), color-mix(in oklab, var(--danger), #000 38%));
+    }
 
     /* ====== Sticky mobile action bar ====== */
     .action-bar{
@@ -184,7 +290,7 @@
            var(--bg);
     }
 
-    /* ====== Focus / Accessibility ====== */
+    /* ====== Focus / Accessibility (links etc.) ====== */
     .btn, a, button { outline: none; }
     .btn:focus-visible, a:focus-visible, button:focus-visible{
         box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent), transparent 65%);
