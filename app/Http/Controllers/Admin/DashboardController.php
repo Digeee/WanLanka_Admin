@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Guider;
 use App\Models\Vehicle;
+use App\Models\Accommodation;
+use App\Models\Place;
 
 class DashboardController extends Controller
 {
@@ -12,7 +14,9 @@ class DashboardController extends Controller
     {
         $guiderCount = Guider::count();
         $vehicleCount = Vehicle::count();
+        $accommodationCount = Accommodation::count();
+        $placeCount = Place::count();
 
-        return view('admin.dashboard', compact('guiderCount', 'vehicleCount'));
+        return view('admin.dashboard', compact('guiderCount', 'vehicleCount', 'accommodationCount', 'placeCount'));
     }
 }

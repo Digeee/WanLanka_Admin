@@ -59,7 +59,7 @@ class VehicleController extends Controller
         $data = $request->validate([
             'vehicle_type' => 'required|in:bike,three_wheeler,car,van,bus',
             'number_plate' => 'required|string|unique:vehicles,number_plate,' . $vehicle->id,
-            'photo' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'photo' => 'nullable|image|mimes:jpg,png,jpeg|max:9048',
             'seat_count' => 'required|integer|min:1',
             'model' => 'nullable|string',
             'year' => 'nullable|integer|min:1900|max:' . date('Y'),

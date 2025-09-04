@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\GuiderController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\VehicleController;
+use App\Http\Controllers\Admin\AccommodationController;
+use App\Http\Controllers\Admin\PlaceController;
 
 // Admin Routes
 Route::get('/', [AuthController::class, 'showAdminLoginForm'])->name('admin.login');  // Route for showing the login form
@@ -39,4 +41,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    Route::resource('accommodations', AccommodationController::class);
+});
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+
+    Route::resource('places', PlaceController::class);
 });

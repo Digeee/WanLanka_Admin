@@ -23,32 +23,29 @@ class GuiderController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|email|unique:guiders',
-            'phone' => 'nullable|string',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:guiders,email',
+            'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string',
-            'city' => 'nullable|string',
+            'city' => 'nullable|string|max:255',
             'languages' => 'nullable|array',
             'specializations' => 'nullable|array',
-            'experience_years' => 'integer|min:0',
-            'hourly_rate' => 'numeric|min:0',
-            'availability' => 'boolean',
+            'experience_years' => 'required|integer|min:0',
+            'hourly_rate' => 'required|numeric|min:0',
+            'availability' => 'required|boolean',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'nic_number' => 'nullable|string',
-            'driving_license_photo' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg|max:9048',
+            'nic_number' => 'nullable|string|max:20',
+            'driving_license_photo' => 'nullable|image|mimes:jpg,png,jpeg|max:9048',
             'vehicle_types' => 'nullable|array',
-            'vehicle_types.*' => 'in:bike,auto,car',
-            'status' => 'in:active,inactive',
+            'status' => 'required|in:active,inactive',
         ]);
 
-        // Handle image upload
+        // Handle image uploads
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('guiders', 'public');
         }
-
-        // Handle driving license photo upload
         if ($request->hasFile('driving_license_photo')) {
             $data['driving_license_photo'] = $request->file('driving_license_photo')->store('guiders', 'public');
         }
@@ -68,6 +65,11 @@ class GuiderController extends Controller
         return redirect()->route('admin.guiders.index')->with('success', 'Guider added successfully.');
     }
 
+    public function show(Guider $guider)
+    {
+        return view('admin.guiders.show', compact('guider'));
+    }
+
     public function edit(Guider $guider)
     {
         return view('admin.guiders.edit', compact('guider'));
@@ -76,35 +78,32 @@ class GuiderController extends Controller
     public function update(Request $request, Guider $guider)
     {
         $data = $request->validate([
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:guiders,email,' . $guider->id,
-            'phone' => 'nullable|string',
+            'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string',
-            'city' => 'nullable|string',
+            'city' => 'nullable|string|max:255',
             'languages' => 'nullable|array',
             'specializations' => 'nullable|array',
-            'experience_years' => 'integer|min:0',
-            'hourly_rate' => 'numeric|min:0',
-            'availability' => 'boolean',
+            'experience_years' => 'required|integer|min:0',
+            'hourly_rate' => 'required|numeric|min:0',
+            'availability' => 'required|boolean',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'nic_number' => 'nullable|string',
-            'driving_license_photo' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg|max:9048',
+            'nic_number' => 'nullable|string|max:20',
+            'driving_license_photo' => 'nullable|image|mimes:jpg,png,jpeg|max:9048',
             'vehicle_types' => 'nullable|array',
-            'vehicle_types.*' => 'in:bike,auto,car',
-            'status' => 'in:active,inactive',
+            'status' => 'required|in:active,inactive',
         ]);
 
-        // Handle image upload
+        // Handle image uploads
         if ($request->hasFile('image')) {
             if ($guider->image && Storage::disk('public')->exists($guider->image)) {
                 Storage::disk('public')->delete($guider->image);
             }
             $data['image'] = $request->file('image')->store('guiders', 'public');
         }
-
-        // Handle driving license photo upload
         if ($request->hasFile('driving_license_photo')) {
             if ($guider->driving_license_photo && Storage::disk('public')->exists($guider->driving_license_photo)) {
                 Storage::disk('public')->delete($guider->driving_license_photo);
@@ -137,10 +136,5 @@ class GuiderController extends Controller
         }
         $guider->delete();
         return redirect()->route('admin.guiders.index')->with('success', 'Guider deleted successfully.');
-    }
-
-    public function show(Guider $guider)
-    {
-        return view('admin.guiders.show', compact('guider'));
     }
 }

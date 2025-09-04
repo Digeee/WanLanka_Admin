@@ -77,14 +77,14 @@
             padding: 15px;
             border-radius: 12px;
             background: #ddffdd;
-            box-shadow: inset 3px 3px 6px #bebebe,
-                        inset -3px -3px 6px #ffffff;
+            box-shadow: inset 3px 3pls
+            inset -3px -3px 6px #ffffff;
             margin-bottom: 20px;
         }
     </style>
 
     <div class="container">
-        <h1>Manage Guiders</h1>
+        <h1>Manage Accommodations</h1>
 
         @if (session('success'))
             <div class="alert alert-success">
@@ -92,32 +92,34 @@
             </div>
         @endif
 
-        <a href="{{ route('admin.guiders.create') }}" class="btn btn-primary mb-3">Add New Guider</a>
+        <a href="{{ route('admin.accommodations.create') }}" class="btn btn-primary mb-3">Add New Accommodation</a>
 
         <table class="table">
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Status</th>
+                    <th>Province</th>
+                    <th>District</th>
+                    <th>Price/Night</th>
+                    <th>Rating</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($guiders as $guider)
+                @foreach ($accommodations as $accommodation)
                     <tr>
-                        <td>{{ $guider->first_name }} {{ $guider->last_name }}</td>
-                        <td>{{ $guider->email }}</td>
-                        <td>{{ $guider->phone ?? 'N/A' }}</td>
-                        <td>{{ $guider->status }}</td>
+                        <td>{{ $accommodation->name }}</td>
+                        <td>{{ $accommodation->province ?? 'N/A' }}</td>
+                        <td>{{ $accommodation->district ?? 'N/A' }}</td>
+                        <td>${{ number_format($accommodation->price_per_night, 2) }}</td>
+                        <td>{{ $accommodation->rating ? number_format($accommodation->rating, 1) : 'N/A' }}</td>
                         <td>
-                            <a href="{{ route('admin.guiders.show', $guider) }}" class="btn btn-secondary">View</a>
-                            <a href="{{ route('admin.guiders.edit', $guider) }}" class="btn btn-warning">Edit</a>
-                            <form action="{{ route('admin.guiders.destroy', $guider) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('admin.accommodations.show', $accommodation) }}" class="btn btn-secondary">View</a>
+                            <a href="{{ route('admin.accommodations.edit', $accommodation) }}" class="btn btn-warning">Edit</a>
+                            <form action="{{ route('admin.accommodations.destroy', $accommodation) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this guider?')">Delete</button>
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this accommodation?')">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -125,6 +127,6 @@
             </tbody>
         </table>
 
-        {{ $guiders->links() }}
+        {{ $accommodations->links() }}
     </div>
 @endsection

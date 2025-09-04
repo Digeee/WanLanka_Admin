@@ -84,7 +84,7 @@
     </style>
 
     <div class="container">
-        <h1>Manage Guiders</h1>
+        <h1>Manage Places</h1>
 
         @if (session('success'))
             <div class="alert alert-success">
@@ -92,39 +92,48 @@
             </div>
         @endif
 
-        <a href="{{ route('admin.guiders.create') }}" class="btn btn-primary mb-3">Add New Guider</a>
+        <a href="{{ route('admin.places.create') }}" class="btn btn-primary mb-3">Add New Place</a>
 
         <table class="table">
             <thead>
                 <tr>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
+                    <th>Province</th>
+                    <th>District</th>
+                    <th>Location</th>
+                    <th>Rating</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($guiders as $guider)
+                @forelse ($places as $place)
                     <tr>
-                        <td>{{ $guider->first_name }} {{ $guider->last_name }}</td>
-                        <td>{{ $guider->email }}</td>
-                        <td>{{ $guider->phone ?? 'N/A' }}</td>
-                        <td>{{ $guider->status }}</td>
+                        <td>{{ $place->name }}</td>
+                        <td>{{ $place->province ?? 'N/A' }}</td>
+                        <td>{{ $place->district ?? 'N/A' }}</td>
+                        <td>{{ $place->location ?? 'N/A' }}</td>
+                        <td>{{ $place->rating ? number_format($place->rating, 1) : 'N/A' }}</td>
+                        <td>{{ $place->status }}</td>
                         <td>
-                            <a href="{{ route('admin.guiders.show', $guider) }}" class="btn btn-secondary">View</a>
-                            <a href="{{ route('admin.guiders.edit', $guider) }}" class="btn btn-warning">Edit</a>
-                            <form action="{{ route('admin.guiders.destroy', $guider) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('admin.places.show', $place) }}" class="btn btn-secondary">View</a>
+                            <a href="{{ route('admin.places.edit', $place) }}" class="btn btn-warning">Edit</a>
+                            <form action="{{ route('admin.places.destroy', $place) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this guider?')">Delete</button>
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this place?')">Delete</button>
                             </form>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="7">No places found.</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
 
-        {{ $guiders->links() }}
+        {{ $places->links() }}
     </div>
 @endsection
+

@@ -1,6 +1,6 @@
 <!-- resources/views/admin/layouts/sidebar.blade.php -->
 
-    <style>
+<style>
         :root {
             --primary-color: #2e8b57;
             --primary-light: #3cb371;
@@ -21,6 +21,13 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+        }
+
         .sidebar {
             width: 260px;
             background: var(--glass-bg);
@@ -33,6 +40,9 @@
             flex-direction: column;
             transition: var(--transition);
             z-index: 100;
+            height: 100vh;
+            position: sticky;
+            top: 0;
         }
 
         .logo-container {
@@ -167,6 +177,8 @@
                 flex-direction: row;
                 padding: 10px;
                 align-items: center;
+                height: auto;
+                position: relative;
             }
 
             .logo-container {
@@ -223,6 +235,13 @@
                     <span class="nav-label">Manage Packages</span>
                 </a>
             </li>
+             <li>
+                        <a href="{{ route('admin.places.index') }}"
+                           class="{{ request()->routeIs('admin.places.*') ? 'active' : '' }} nav-link">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span class="nav-label">Manage Places</span>
+                        </a>
+                    </li>
             <li>
                 <a href="#">
                     <i class="fas fa-users"></i>
@@ -244,12 +263,13 @@
                     <span class="nav-label">Manage Vehicles</span>
                 </a>
             </li>
-            <li>
-                <a href="#">
-                    <i class="fas fa-hotel"></i>
-                    <span class="nav-label">Accommodations</span>
-                </a>
-            </li>
+             <li>
+                        <a href="{{ route('admin.accommodations.index') }}"
+                           class="{{ request()->routeIs('admin.accommodations.*') ? 'active' : '' }} nav-link">
+                            <i class="fas fa-hotel"></i>
+                            <span class="nav-label">Manage Accommodations</span>
+                        </a>
+                    </li>
             <li>
                 <a href="#">
                     <i class="fas fa-cog"></i>

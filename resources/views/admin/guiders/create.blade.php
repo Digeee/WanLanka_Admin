@@ -1,41 +1,32 @@
-
 @extends('admin.layouts.master')
 
 @section('content')
     <style>
-        /* 🌟 Container */
         .container {
             max-width: 900px;
             margin: 30px auto;
             padding: 30px;
             border-radius: 20px;
-            background: #e0e0e0; /* light grey bg */
+            background: #e0e0e0;
             box-shadow: 9px 9px 16px #bebebe,
                         -9px -9px 16px #ffffff;
         }
-
-        /* 🌟 Headings */
         .container h1 {
             text-align: center;
             margin-bottom: 25px;
             color: #333;
             font-weight: 600;
         }
-
-        /* 🌟 Form Groups */
         .form-group {
             margin-bottom: 20px;
         }
-
         label {
             font-weight: 500;
             margin-bottom: 6px;
             display: block;
             color: #444;
         }
-
-        /* 🌟 Inputs */
-        .form-control, .form-control-file, .form-check-input, textarea {
+        .form-control, .form-control-file, .form-check-input, textarea, select {
             width: 100%;
             padding: 12px;
             border-radius: 12px;
@@ -46,20 +37,15 @@
             outline: none;
             transition: 0.3s ease;
         }
-
-        .form-control:focus, textarea:focus {
+        .form-control:focus, textarea:focus, select:focus {
             box-shadow: inset 2px 2px 5px #bebebe,
                         inset -2px -2px 5px #ffffff;
         }
-
-        /* 🌟 Checkbox + Radio */
         .form-check-input {
             width: auto;
             margin-right: 10px;
             cursor: pointer;
         }
-
-        /* 🌟 Buttons */
         .btn-primary, .btn-secondary {
             padding: 12px 25px;
             border-radius: 12px;
@@ -69,31 +55,25 @@
             transition: 0.3s ease;
             margin-top: 10px;
         }
-
         .btn-primary {
             background: #e0e0e0;
             box-shadow: 5px 5px 10px #bebebe,
                         -5px -5px 10px #ffffff;
         }
-
         .btn-primary:hover {
             box-shadow: inset 3px 3px 6px #bebebe,
                         inset -3px -3px 6px #ffffff;
         }
-
         .btn-secondary {
             background: #f1f1f1;
             margin-left: 10px;
             box-shadow: 5px 5px 10px #bebebe,
                         -5px -5px 10px #ffffff;
         }
-
         .btn-secondary:hover {
             box-shadow: inset 3px 3px 6px #bebebe,
                         inset -3px -3px 6px #ffffff;
         }
-
-        /* 🌟 Alert */
         .alert-danger {
             padding: 15px;
             border-radius: 12px;
@@ -102,7 +82,6 @@
                         inset -3px -3px 6px #ffffff;
             margin-bottom: 20px;
         }
-
     </style>
 
     <div class="container">
@@ -160,17 +139,17 @@
             </div>
             <div class="form-group">
                 <label for="experience_years">Experience (Years)</label>
-                <input type="number" name="experience_years" id="experience_years" class="form-control" value="{{ old('experience_years', 0) }}" min="0">
+                <input type="number" name="experience_years" id="experience_years" class="form-control" value="{{ old('experience_years', 0) }}" min="0" required>
             </div>
             <div class="form-group">
                 <label for="hourly_rate">Hourly Rate</label>
-                <input type="number" name="hourly_rate" id="hourly_rate" class="form-control" value="{{ old('hourly_rate', 0) }}" step="0.01" min="0">
+                <input type="number" name="hourly_rate" id="hourly_rate" class="form-control" value="{{ old('hourly_rate', 0) }}" step="0.01" min="0" required>
             </div>
             <div class="form-group">
                 <label for="availability">Availability</label>
-                <select name="availability" id="availability" class="form-control">
-                    <option value="1" {{ old('availability') ? 'selected' : '' }}>Available</option>
-                    <option value="0" {{ !old('availability') ? 'selected' : '' }}>Not Available</option>
+                <select name="availability" id="availability" class="form-control" required>
+                    <option value="1" {{ old('availability', 1) ? 'selected' : '' }}>Available</option>
+                    <option value="0" {{ old('availability', 1) ? '' : 'selected' }}>Not Available</option>
                 </select>
             </div>
             <div class="form-group">
@@ -206,9 +185,9 @@
             </div>
             <div class="form-group">
                 <label for="status">Status</label>
-                <select name="status" id="status" class="form-control">
-                    <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                    <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                <select name="status" id="status" class="form-control" required>
+                    <option value="active" {{ old('status', 'active') == 'active' ? 'selected' : '' }}>Active</option>
+                    <option value="inactive" {{ old('status', 'active') == 'inactive' ? 'selected' : '' }}>Inactive</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Save Guider</button>
