@@ -271,7 +271,8 @@
                         </a>
                     </li>
             <li>
-                <a href="#">
+                        <a href="{{ route('admin.ui_management.UI_index') }}"
+                           class="{{ request()->routeIs('admin.ui_management.*') ? 'active' : '' }} nav-link">
                     <i class="fas fa-cog"></i>
                     <span class="nav-label">UI Settings</span>
                 </a>
@@ -285,3 +286,4 @@
             </button>
         </div>
     </nav>
+
