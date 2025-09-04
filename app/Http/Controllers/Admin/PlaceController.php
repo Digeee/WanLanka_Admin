@@ -54,7 +54,7 @@ class PlaceController extends Controller
             'latitude' => 'nullable|numeric|between:-90,90',
             'longitude' => 'nullable|numeric|between:-180,180',
             'gallery' => 'nullable|array',
-            'gallery.*' => 'image|mimes:jpg,png,jpeg|max:048',
+            'gallery.*' => 'image|mimes:jpg,png,jpeg|max:9048',
             'entry_fee' => 'nullable|numeric|min:0',
             'opening_hours' => 'nullable|string|max:255',
             'best_time_to_visit' => 'nullable|string|max:255',
