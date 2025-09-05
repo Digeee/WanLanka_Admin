@@ -207,7 +207,7 @@
                         <label for="latitude">Latitude</label>
                         <input type="number" name="latitude" id="latitude" class="form-control" value="{{ old('latitude') }}" step="0.00000001" min="-90" max="90">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group"> 
                         <label for="longitude">Longitude</label>
                         <input type="number" name="longitude" id="longitude" class="form-control" value="{{ old('longitude') }}" step="0.00000001" min="-180" max="180">
                     </div>
