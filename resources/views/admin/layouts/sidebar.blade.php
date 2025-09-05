@@ -224,6 +224,14 @@
                 </a>
             </li>
             <li>
+                        <a href="{{ route('admin.places.index') }}"
+                           class="{{ request()->routeIs('admin.places.*') ? 'active' : '' }} nav-link">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span class="nav-label">Manage Places</span>
+                        </a>
+                    </li>
+
+            <li>
                 <a href="#">
                     <i class="fas fa-users"></i>
                     <span class="nav-label">Manage Users</span>
@@ -245,7 +253,8 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="{{ route('admin.accommodations.index') }}"
+                class="{{ request()->routeIs('admin.accommodations.*') ? 'active' : '' }}">
                     <i class="fas fa-hotel"></i>
                     <span class="nav-label">Accommodations</span>
                 </a>
