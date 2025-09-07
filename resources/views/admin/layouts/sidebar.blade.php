@@ -291,12 +291,13 @@ body {
                             <span class="nav-label">Dashboard</span>
                         </a>
                     </li>
-            <li>
-                <a href="#">
-                    <i class="fas fa-suitcase"></i>
-                    <span class="nav-label">Manage Packages</span>
-                </a>
-            </li>
+             <li>
+                        <a href="{{ route('admin.packages.index') }}"
+                           class="{{ request()->routeIs('admin.packages.*') ? 'active' : '' }} nav-link">
+                            <i class="fas fa-box-open"></i>
+                            <span class="nav-label">Manage Packages</span>
+                        </a>
+                    </li>
             <li>
                         <a href="{{ route('admin.places.index') }}"
                            class="{{ request()->routeIs('admin.places.*') ? 'active' : '' }} nav-link">

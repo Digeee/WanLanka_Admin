@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\AccommodationController;
 use App\Http\Controllers\Admin\PlaceController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\UIManagementController;
+use App\Http\Controllers\Admin\PackageController;
+
 // Admin Routes
 Route::get('/', [AuthController::class, 'showAdminLoginForm'])->name('admin.login');  // Route for showing the login form
 Route::post('admin/login', [AuthController::class, 'adminLogin']);  // Route for handling login form submission (POST)
@@ -62,4 +64,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('ui_management', [UIManagementController::class, 'index'])->name('ui_management.UI_index');
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('packages', PackageController::class);
+});
+
+
+
+
+
+Route::get('/', function () {
+    return redirect()->route('admin.dashboard');
 });
