@@ -178,11 +178,9 @@
             <h3>Total Places</h3>
             <p>{{ $placeCount }}</p>
         </div>
-        <div class="col-md-3">
-                <div class="card">
-                    <h3>Total Packages</h3>
-                    <p>{{ $packageCount }}</p>
-                </div>
+        <div class="stat t-green">
+            <h3>Total Packages</h3>
+            <p>{{ $packageCount }}</p>
         </div>
     </div>
 </div>

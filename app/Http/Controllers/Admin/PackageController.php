@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Package;
 use App\Models\Place;
-use App\Models\Vehicle;
 use App\Models\Accommodation;
+use App\Models\Vehicle;
+use App\Models\DayPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class PackageController extends Controller
@@ -27,10 +29,10 @@ class PackageController extends Controller
      */
     public function create()
     {
-        $places = Place::where('status', 'active')->get();
-        $vehicles = Vehicle::where('status', 'active')->get();
+        $places = Place::all();
         $accommodations = Accommodation::all();
-        return view('admin.packages.create', compact('places', 'vehicles', 'accommodations'));
+        $vehicles = Vehicle::all();
+        return view('admin.packages.create', compact('places', 'accommodations', 'vehicles'));
     }
 
     /**
@@ -38,15 +40,14 @@ class PackageController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $validated = $request->validate([
             'package_name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'nullable|numeric|min:0',
-            'cover_image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'gallery' => 'nullable|array',
-            'gallery.*' => 'image|mimes:jpg,png,jpeg|max:2048',
-            'starting_date' => 'nullable|date|after_or_equal:today',
-            'expiry_date' => 'nullable|date|after:starting_date',
+            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png|max:9048',
+            'gallery.*' => 'nullable|image|mimes:jpg,jpeg,png|max:9048',
+            'starting_date' => 'nullable|date',
+            'expiry_date' => 'nullable|date|after_or_equal:starting_date',
             'related_places' => 'required|array',
             'related_places.*' => 'exists:places,id',
             'accommodations' => 'required|array',
@@ -56,63 +57,63 @@ class PackageController extends Controller
             'day_plans.*.plan' => 'nullable|string',
             'day_plans.*.accommodation_id' => 'nullable|exists:accommodations,id',
             'day_plans.*.description' => 'nullable|string',
-            'day_plans.*.photos' => 'nullable|array',
-            'day_plans.*.photos.*' => 'image|mimes:jpg,png,jpeg|max:2048',
+            'day_plans.*.photos.*' => 'nullable|image|mimes:jpg,jpeg,png|max:9048',
             'inclusions' => 'nullable|array',
-            'inclusions.*' => 'string|max:255',
             'vehicle_type_id' => 'required|exists:vehicles,id',
             'package_type' => 'required|in:low_budget,high_budget,custom',
             'status' => 'required|in:active,inactive,draft',
-            'rating' => 'nullable|numeric|between:0,5',
+            'rating' => 'nullable|numeric|min:0|max:5',
             'reviews' => 'nullable|array',
-            'reviews.*' => 'string',
         ]);
 
-        // Generate unique slug
-        $baseSlug = Str::slug($data['package_name']);
-        $slug = $baseSlug;
-        $counter = 1;
-        while (Package::where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $counter++;
-        }
-        $data['slug'] = $slug;
+        Log::info('Validated data: ' . json_encode($validated));
 
-        // Store related places in JSON column for backward compatibility
-        $data['places'] = $request->input('related_places', []);
-
-        // Handle cover image
+        $data = $validated;
+        $data['slug'] = Str::slug($validated['package_name']);
         if ($request->hasFile('cover_image')) {
-            $data['cover_image'] = $request->file('cover_image')->store('packages', 'public');
+            Log::info('Cover image uploaded: ' . $request->file('cover_image')->getClientOriginalName());
+            $path = $request->file('cover_image')->store('packages', 'public');
+            Log::info('Cover image stored at: ' . $path);
+            $data['cover_image'] = $path;
+        } else {
+            Log::info('No cover image uploaded');
+            $data['cover_image'] = null;
         }
 
-        // Handle gallery images
-        if ($request->hasFile('gallery')) {
-            $galleryPaths = [];
-            foreach ($request->file('gallery') as $file) {
-                $galleryPaths[] = $file->store('packages/gallery', 'public');
-            }
-            $data['gallery'] = $galleryPaths;
-        }
-
-        // Handle day plans photos
-        if ($request->has('day_plans')) {
-            foreach ($data['day_plans'] as $day => &$plan) {
-                if ($request->hasFile("day_plans.{$day}.photos")) {
-                    $photos = [];
-                    foreach ($request->file("day_plans.{$day}.photos") as $photo) {
-                        $photos[] = $photo->store('packages/day_plans', 'public');
-                    }
-                    $plan['photos'] = $photos;
-                }
-            }
-        }
-
-        // Create package
         $package = Package::create($data);
 
-        // Sync places and accommodations
-        $package->relatedPlaces()->sync($request->input('related_places', []));
-        $package->accommodations()->sync($request->input('accommodations', []));
+        if ($request->hasFile('gallery')) {
+            $galleryPaths = [];
+            foreach ($request->file('gallery') as $image) {
+                $galleryPaths[] = $image->store('gallery', 'public');
+            }
+            $package->gallery = $galleryPaths;
+            $package->save();
+        }
+
+        if (!empty($validated['day_plans'])) {
+            foreach ($validated['day_plans'] as $index => $dayPlan) {
+                $photos = [];
+                if ($request->hasFile("day_plans.$index.photos")) {
+                    foreach ($request->file("day_plans.$index.photos") as $photo) {
+                        $photos[] = $photo->store('day_plans', 'public');
+                    }
+                }
+                $package->dayPlans()->create([
+                    'day_number' => $index + 1,
+                    'plan' => $dayPlan['plan'] ?? null,
+                    'accommodation_id' => $dayPlan['accommodation_id'] ?? null,
+                    'description' => $dayPlan['description'] ?? null,
+                    'photos' => $photos,
+                ]);
+            }
+        }
+
+        $package->relatedPlaces()->sync($validated['related_places']);
+        $package->accommodations()->sync($validated['accommodations']);
+        $package->inclusions = $validated['inclusions'] ?? [];
+        $package->reviews = $validated['reviews'] ?? [];
+        $package->save();
 
         return redirect()->route('admin.packages.index')->with('success', 'Package created successfully.');
     }
@@ -122,7 +123,6 @@ class PackageController extends Controller
      */
     public function show(Package $package)
     {
-        $package->load('relatedPlaces', 'vehicle', 'accommodations');
         return view('admin.packages.show', compact('package'));
     }
 
@@ -131,11 +131,10 @@ class PackageController extends Controller
      */
     public function edit(Package $package)
     {
-        $package->load('relatedPlaces', 'accommodations');
-        $places = Place::where('status', 'active')->get();
-        $vehicles = Vehicle::where('status', 'active')->get();
+        $places = Place::all();
         $accommodations = Accommodation::all();
-        return view('admin.packages.edit', compact('package', 'places', 'vehicles', 'accommodations'));
+        $vehicles = Vehicle::all();
+        return view('admin.packages.edit', compact('package', 'places', 'accommodations', 'vehicles'));
     }
 
     /**
@@ -143,15 +142,14 @@ class PackageController extends Controller
      */
     public function update(Request $request, Package $package)
     {
-        $data = $request->validate([
+        $validated = $request->validate([
             'package_name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'nullable|numeric|min:0',
-            'cover_image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
-            'gallery' => 'nullable|array',
-            'gallery.*' => 'image|mimes:jpg,png,jpeg|max:2048',
-            'starting_date' => 'nullable|date|after_or_equal:today',
-            'expiry_date' => 'nullable|date|after:starting_date',
+            'cover_image' => 'nullable|image|mimes:jpg,jpeg,png|max:9048',
+            'gallery.*' => 'nullable|image|mimes:jpg,jpeg,png|max:9048',
+            'starting_date' => 'nullable|date',
+            'expiry_date' => 'nullable|date|after_or_equal:starting_date',
             'related_places' => 'required|array',
             'related_places.*' => 'exists:places,id',
             'accommodations' => 'required|array',
@@ -161,78 +159,60 @@ class PackageController extends Controller
             'day_plans.*.plan' => 'nullable|string',
             'day_plans.*.accommodation_id' => 'nullable|exists:accommodations,id',
             'day_plans.*.description' => 'nullable|string',
-            'day_plans.*.photos' => 'nullable|array',
-            'day_plans.*.photos.*' => 'image|mimes:jpg,png,jpeg|max:2048',
+            'day_plans.*.photos.*' => 'nullable|image|mimes:jpg,jpeg,png|max:9048',
             'inclusions' => 'nullable|array',
-            'inclusions.*' => 'string|max:255',
             'vehicle_type_id' => 'required|exists:vehicles,id',
             'package_type' => 'required|in:low_budget,high_budget,custom',
             'status' => 'required|in:active,inactive,draft',
-            'rating' => 'nullable|numeric|between:0,5',
+            'rating' => 'nullable|numeric|min:0|max:5',
             'reviews' => 'nullable|array',
-            'reviews.*' => 'string',
         ]);
 
-        // Generate unique slug
-        $baseSlug = Str::slug($data['package_name']);
-        $slug = $baseSlug;
-        $counter = 1;
-        while (Package::where('slug', $slug)->where('id', '!=', $package->id)->exists()) {
-            $slug = $baseSlug . '-' . $counter++;
-        }
-        $data['slug'] = $slug;
-
-        // Store related places in JSON column for backward compatibility
-        $data['places'] = $request->input('related_places', []);
-
-        // Handle cover image
+        $data = $validated;
+        $data['slug'] = Str::slug($validated['package_name']);
         if ($request->hasFile('cover_image')) {
-            if ($package->cover_image && Storage::disk('public')->exists($package->cover_image)) {
+            if ($package->cover_image) {
                 Storage::disk('public')->delete($package->cover_image);
             }
-            $data['cover_image'] = $request->file('cover_image')->store('packages', 'public');
+            $path = $request->file('cover_image')->store('packages', 'public');
+            $data['cover_image'] = $path;
         }
 
-        // Handle gallery images
-        if ($request->hasFile('gallery')) {
-            if ($package->gallery) {
-                foreach ($package->gallery as $existingImage) {
-                    Storage::disk('public')->delete($existingImage);
-                }
-            }
-            $galleryPaths = [];
-            foreach ($request->file('gallery') as $file) {
-                $galleryPaths[] = $file->store('packages/gallery', 'public');
-            }
-            $data['gallery'] = $galleryPaths;
-        }
-
-        // Handle day plans photos
-        if ($request->has('day_plans')) {
-            foreach ($package->day_plans ?? [] as $day => $existingPlan) {
-                if (!empty($existingPlan['photos'])) {
-                    foreach ($existingPlan['photos'] as $photo) {
-                        Storage::disk('public')->delete($photo);
-                    }
-                }
-            }
-            foreach ($data['day_plans'] as $day => &$plan) {
-                if ($request->hasFile("day_plans.{$day}.photos")) {
-                    $photos = [];
-                    foreach ($request->file("day_plans.{$day}.photos") as $photo) {
-                        $photos[] = $photo->store('packages/day_plans', 'public');
-                    }
-                    $plan['photos'] = $photos;
-                }
-            }
-        }
-
-        // Update package
         $package->update($data);
 
-        // Sync places and accommodations
-        $package->relatedPlaces()->sync($request->input('related_places', []));
-        $package->accommodations()->sync($request->input('accommodations', []));
+        if ($request->hasFile('gallery')) {
+            $galleryPaths = $package->gallery ?? [];
+            foreach ($request->file('gallery') as $image) {
+                $galleryPaths[] = $image->store('gallery', 'public');
+            }
+            $package->gallery = $galleryPaths;
+            $package->save();
+        }
+
+        $package->dayPlans()->delete();
+        if (!empty($validated['day_plans'])) {
+            foreach ($validated['day_plans'] as $index => $dayPlan) {
+                $photos = [];
+                if ($request->hasFile("day_plans.$index.photos")) {
+                    foreach ($request->file("day_plans.$index.photos") as $photo) {
+                        $photos[] = $photo->store('day_plans', 'public');
+                    }
+                }
+                $package->dayPlans()->create([
+                    'day_number' => $index + 1,
+                    'plan' => $dayPlan['plan'] ?? null,
+                    'accommodation_id' => $dayPlan['accommodation_id'] ?? null,
+                    'description' => $dayPlan['description'] ?? null,
+                    'photos' => $photos,
+                ]);
+            }
+        }
+
+        $package->relatedPlaces()->sync($validated['related_places']);
+        $package->accommodations()->sync($validated['accommodations']);
+        $package->inclusions = $validated['inclusions'] ?? [];
+        $package->reviews = $validated['reviews'] ?? [];
+        $package->save();
 
         return redirect()->route('admin.packages.index')->with('success', 'Package updated successfully.');
     }
@@ -242,34 +222,25 @@ class PackageController extends Controller
      */
     public function destroy(Package $package)
     {
-        // Delete cover image
-        if ($package->cover_image && Storage::disk('public')->exists($package->cover_image)) {
+        if ($package->cover_image) {
             Storage::disk('public')->delete($package->cover_image);
         }
-
-        // Delete gallery images
-        if ($package->gallery) {
-            foreach ($package->gallery as $galleryImage) {
-                Storage::disk('public')->delete($galleryImage);
+        if ($package->gallery && is_array($package->gallery)) {
+            foreach ($package->gallery as $image) {
+                Storage::disk('public')->delete($image);
             }
         }
-
-        // Delete day plan photos
-        if ($package->day_plans) {
-            foreach ($package->day_plans as $dayPlan) {
-                if (!empty($dayPlan['photos'])) {
-                    foreach ($dayPlan['photos'] as $photo) {
+        if ($package->dayPlans()->exists()) {
+            foreach ($package->dayPlans as $dayPlan) {
+                if ($dayPlan->photos && is_array($dayPlan->photos)) {
+                    foreach ($dayPlan->photos as $photo) {
                         Storage::disk('public')->delete($photo);
                     }
                 }
             }
+            $package->dayPlans()->delete();
         }
 
-        // Detach relationships
-        $package->relatedPlaces()->detach();
-        $package->accommodations()->detach();
-
-        // Delete package
         $package->delete();
 
         return redirect()->route('admin.packages.index')->with('success', 'Package deleted successfully.');

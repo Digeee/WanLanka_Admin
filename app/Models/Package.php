@@ -48,6 +48,11 @@ class Package extends Model
     {
         return $this->belongsToMany(Place::class, 'package_place', 'package_id', 'place_id');
     }
+    public function dayPlans()
+    {
+        return $this->hasMany(DayPlan::class, 'package_id');
+    }
+
 
     public function accommodations()
     {

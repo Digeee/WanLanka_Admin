@@ -1,4 +1,3 @@
-
 @extends('admin.layouts.master')
 
 @section('content')
@@ -12,95 +11,82 @@
             box-shadow: 9px 9px 16px #bebebe,
                         -9px -9px 16px #ffffff;
         }
-        .container h1 {
+        h1 {
             text-align: center;
             margin-bottom: 25px;
             color: #333;
             font-weight: 600;
         }
         .table {
-            background: #e0e0e0;
-            border-radius: 15px;
-            box-shadow: 5px 5px 10px #bebebe,
-                        -5px -5px 10px #ffffff;
+            width: 100%;
+            border-collapse: collapse;
+            background: #f1f1f1;
+            box-shadow: inset 3px 3px 6px #bebebe,
+                        inset -3px -3px 6px #ffffff;
+            border-radius: 10px;
         }
-        .table th, .table td {
+        th, td {
             padding: 15px;
-            vertical-align: middle;
-            color: #333;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
         }
-        .btn-primary, .btn-warning, .btn-danger, .btn-secondary {
-            padding: 10px 20px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
+        th {
+            background: #e0e0e0;
             font-weight: 600;
-            transition: 0.3s ease;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
             margin-right: 5px;
         }
-        .btn-primary {
+        .btn-secondary {
             background: #e0e0e0;
             box-shadow: 5px 5px 10px #bebebe,
                         -5px -5px 10px #ffffff;
-        }
-        .btn-primary:hover {
-            box-shadow: inset 3px 3px 6px #bebebe,
-                        inset -3px -3px 6px #ffffff;
+            color: #333;
         }
         .btn-warning {
+            background: #f7d794;
+            color: #333;
+        }
+        .btn-danger {
+            background: #ff6b6b;
+            color: #fff;
+        }
+        .btn:hover {
+            box-shadow: inset 3px 3px 6px #bebebe,
+                        inset -3px -3px 6px #ffffff;
+        }
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .pagination .page-link {
+            border-radius: 10px;
+            margin: 0 5px;
             background: #e0e0e0;
             box-shadow: 5px 5px 10px #bebebe,
                         -5px -5px 10px #ffffff;
+            color: #333;
         }
-        .btn-warning:hover {
+        .pagination .page-link:hover {
             box-shadow: inset 3px 3px 6px #bebebe,
                         inset -3px -3px 6px #ffffff;
-        }
-        .btn-danger {
-            background: #ffdddd;
-            box-shadow: 5px 5px 10px #bebebe,
-                        -5px -5px 10px #ffffff;
-        }
-        .btn-danger:hover {
-            box-shadow: inset 3px 3px 6px #bebebe,
-                        inset -3px -3px 6px #ffffff;
-        }
-        .btn-secondary {
-            background: #f1f1f1;
-            box-shadow: 5px 5px 10px #bebebe,
-                        -5px -5px 10px #ffffff;
-        }
-        .btn-secondary:hover {
-            box-shadow: inset 3px 3px 6px #bebebe,
-                        inset -3px -3px 6px #ffffff;
-        }
-        .alert-success {
-            padding: 15px;
-            border-radius: 12px;
-            background: #ddffdd;
-            box-shadow: inset 3px 3px 6px #bebebe,
-                        inset -3px -3px 6px #ffffff;
-            margin-bottom: 20px;
         }
     </style>
 
     <div class="container">
-        <h1>Manage Packages</h1>
-
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <a href="{{ route('admin.packages.create') }}" class="btn btn-primary mb-3">Add New Package</a>
-
-        <table class="table">
+        <h1>Packages</h1>
+        <a href="{{ route('admin.packages.create') }}" class="btn btn-primary">Create New Package</a>
+        <table class="table mt-4">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Days</th>
-                    <th>Package Type</th>
+                    <th>Type</th>
                     <th>Price</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -132,6 +118,8 @@
             </tbody>
         </table>
 
-        {{ $packages->links() }}
+        <div class="pagination">
+            {{ $packages->links() }}
+        </div>
     </div>
 @endsection

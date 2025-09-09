@@ -246,6 +246,6 @@
         }
 
         daysInput.addEventListener('input', updateDayPlans);
-        updateDayPlans(); // Initial call
+        updateDayPlans();
     </script>
 @endsection
