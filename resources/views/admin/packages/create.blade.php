@@ -1,95 +1,98 @@
 @extends('admin.layouts.master')
 
 @section('content')
-    <style>
-        .container {
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 30px;
-            border-radius: 20px;
-            background: #e0e0e0;
-            box-shadow: 9px 9px 16px #bebebe,
-                        -9px -9px 16px #ffffff;
-        }
-        .container h1 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #333;
-            font-weight: 600;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            font-weight: 500;
-            margin-bottom: 6px;
-            display: block;
-            color: #444;
-        }
-        .form-control, .form-control-file, textarea, select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: none;
-            background: #e0e0e0;
-            box-shadow: inset 4px 4px 8px #bebebe,
-                        inset -4px -4px 8px #ffffff;
-            outline: none;
-            transition: 0.3s ease;
-        }
-        .form-control:focus, textarea:focus, select:focus {
-            box-shadow: inset 2px 2px 5px #bebebe,
-                        inset -2px -2px 5px #ffffff;
-        }
-        .btn-primary, .btn-secondary {
-            padding: 12px 25px;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s ease;
-            margin-top: 10px;
-        }
-        .btn-primary {
-            background: #e0e0e0;
-            box-shadow: 5px 5px 10px #bebebe,
-                        -5px -5px 10px #ffffff;
-        }
-        .btn-primary:hover {
-            box-shadow: inset 3px 3px 6px #bebebe,
-                        inset -3px -3px 6px #ffffff;
-        }
-        .btn-secondary {
-            background: #f1f1f1;
-            margin-left: 10px;
-            box-shadow: 5px 5px 10px #bebebe,
-                        -5px -5px 10px #ffffff;
-        }
-        .btn-secondary:hover {
-            box-shadow: inset 3px 3px 6px #bebebe,
-                        inset -3px -3px 6px #ffffff;
-        }
-        .alert-danger {
-            padding: 15px;
-            border-radius: 12px;
-            background: #ffdddd;
-            box-shadow: inset 3px 3px 6px #bebebe,
-                        inset -3px -3px 6px #ffffff;
-            margin-bottom: 20px;
-        }
-        .day-plan {
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            background: #f1f1f1;
-            box-shadow: inset 3px 3px 6px #bebebe,
-                        inset -3px -3px 6px #ffffff;
-        }
-    </style>
+<style>
+    /* ====== Design Tokens (Light / Dark) ====== */
+    :root{
+        --bg:#f8fafc; --panel:#ffffff; --muted:#64748b; --text:#0f172a;
+        --border:#e2e8f0; --ring:#3b82f6; --accent:#3b82f6; --accent-2:#22c55e;
+        --danger:#ef4444; --warning:#f59e0b; --radius:16px;
+        --shadow-1:0 2px 4px rgba(0,0,0,.04),0 4px 6px rgba(0,0,0,.06);
+    }
+    [data-theme="dark"]{
+        --bg:#0b1220; --panel:#111827; --muted:#9ca3af; --text:#f3f4f6;
+        --border:#1f2937; --ring:#60a5fa; --accent:#60a5fa; --accent-2:#34d399;
+        --danger:#f87171; --warning:#fbbf24;
+        --shadow-1:0 2px 6px rgba(0,0,0,.55);
+    }
 
-    <div class="container">
-        <h1>Add New Package</h1>
+    body{background:var(--bg);}
+    .shell{max-width:1000px;margin:28px auto 80px;padding:0 20px;color:var(--text);}
 
+    /* ====== Page Header ====== */
+    .page-header{
+        display:flex;align-items:center;justify-content:space-between;
+        background:var(--panel);
+        border:1px solid var(--border);
+        border-radius:20px;
+        padding:20px 24px;
+        box-shadow:var(--shadow-1);
+        margin-bottom:24px;
+    }
+    .breadcrumbs{font-size:14px;color:var(--muted);margin-bottom:4px;}
+    .breadcrumbs a{color:inherit;text-decoration:none;}
+    .title{margin:0;font-size:24px;font-weight:800;}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;}
+
+    /* ====== Buttons (outlined pill style) ====== */
+    .btn{
+        display:inline-flex;align-items:center;justify-content:center;
+        padding:8px 18px;
+        border-radius:999px;
+        font-weight:700;font-size:14px;
+        text-decoration:none;cursor:pointer;
+        transition:all .25s ease;
+        border:1.5px solid var(--ring);
+        background:transparent;
+        color:var(--ring);
+    }
+    .btn:hover{
+        background:var(--ring);
+        color:#fff;
+        box-shadow:0 4px 12px rgba(59,130,246,.25);
+    }
+
+    /* ====== Form Panel ====== */
+    .panel{background:var(--panel);border:1px solid var(--border);
+        border-radius:var(--radius);box-shadow:var(--shadow-1);padding:24px;}
+
+    .form-group{margin-bottom:18px;}
+    label{font-weight:600;margin-bottom:6px;display:block;color:var(--text);}
+    .form-control,.form-control-file,textarea,select{
+        width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);
+        background:var(--panel);box-shadow:inset 0 1px 2px rgba(0,0,0,.04);
+        font-size:14px;color:var(--text);
+    }
+    .form-control:focus,textarea:focus,select:focus{
+        outline:none;border-color:var(--accent);
+        box-shadow:0 0 0 3px color-mix(in oklab,var(--accent),transparent 70%);
+    }
+
+    /* Alerts */
+    .alert{border-radius:12px;padding:12px 14px;font-weight:700;margin-bottom:18px;}
+    .alert-danger{color:#991b1b;background:#fee2e2;border:1px solid #fecaca;}
+    [data-theme="dark"] .alert-danger{color:#fecaca;background:rgba(239,68,68,.15);border:1px solid #7f1d1d;}
+
+    /* Day plan box */
+    .day-plan{padding:16px;margin-bottom:15px;border-radius:14px;
+        background:color-mix(in oklab,var(--panel),transparent 8%);border:1px solid var(--border);}
+</style>
+
+<div class="shell">
+    {{-- Page header --}}
+    <div class="page-header">
+        <div>
+            <div class="breadcrumbs"><a href="{{ route('admin.packages.index') }}">Packages</a> / <span>Create</span></div>
+            <h1 class="title">Add New Package</h1>
+        </div>
+        <div class="actions">
+            <button type="button" id="themeToggle" class="btn">Theme</button>
+            <a href="{{ route('admin.packages.index') }}" class="btn">Back</a>
+        </div>
+    </div>
+
+    {{-- Form --}}
+    <div class="panel">
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -154,9 +157,8 @@
                 <label for="days">Number of Days</label>
                 <input type="number" name="days" id="days" class="form-control" value="{{ old('days', 1) }}" min="1" required>
             </div>
-            <div id="day-plans-container">
-                <!-- Dynamic day plans will be injected here -->
-            </div>
+            <div id="day-plans-container"></div>
+
             <div class="form-group">
                 <label for="inclusions">Inclusions (comma-separated)</label>
                 <input type="text" name="inclusions[]" id="inclusions" class="form-control" value="{{ old('inclusions') ? implode(',', old('inclusions')) : '' }}">
@@ -196,56 +198,76 @@
                 <label for="reviews">Reviews (comma-separated)</label>
                 <input type="text" name="reviews[]" id="reviews" class="form-control" value="{{ old('reviews') ? implode(',', old('reviews')) : '' }}">
             </div>
-            <button type="submit" class="btn btn-primary">Save Package</button>
-            <a href="{{ route('admin.packages.index') }}" class="btn btn-secondary">Cancel</a>
+
+            <button type="submit" class="btn">Save Package</button>
+            <a href="{{ route('admin.packages.index') }}" class="btn">Cancel</a>
         </form>
     </div>
+</div>
 
-    <script>
-        const daysInput = document.getElementById('days');
-        const dayPlansContainer = document.getElementById('day-plans-container');
-        const oldDayPlans = @json(old('day_plans', []));
-        const accommodations = @json($accommodations);
-
-        function updateDayPlans() {
-            const days = parseInt(daysInput.value) || 1;
-            dayPlansContainer.innerHTML = '';
-
-            for (let i = 0; i < days; i++) {
-                const dayPlan = oldDayPlans[i] || {};
-                const dayPlanDiv = document.createElement('div');
-                dayPlanDiv.className = 'day-plan';
-                dayPlanDiv.innerHTML = `
-                    <h4>Day ${i + 1}</h4>
-                    <div class="form-group">
-                        <label for="day_plans[${i}][plan]">Plan</label>
-                        <textarea name="day_plans[${i}][plan]" id="day_plans[${i}][plan]" class="form-control">${dayPlan.plan || ''}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="day_plans[${i}][accommodation_id]">Accommodation</label>
-                        <select name="day_plans[${i}][accommodation_id]" id="day_plans[${i}][accommodation_id]" class="form-control">
-                            <option value="" ${!dayPlan.accommodation_id ? 'selected' : ''}>Select Accommodation</option>
-                            ${accommodations.map(accommodation => `
-                                <option value="${accommodation.id}" ${dayPlan.accommodation_id == accommodation.id ? 'selected' : ''}>
-                                    ${accommodation.name} (${accommodation.province} - ${accommodation.district})
-                                </option>
-                            `).join('')}
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="day_plans[${i}][description]">Description</label>
-                        <textarea name="day_plans[${i}][description]" id="day_plans[${i}][description]" class="form-control">${dayPlan.description || ''}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="day_plans[${i}][photos][]">Photos</label>
-                        <input type="file" name="day_plans[${i}][photos][]" id="day_plans[${i}][photos]" class="form-control-file" multiple>
-                    </div>
-                `;
-                dayPlansContainer.appendChild(dayPlanDiv);
-            }
+<script>
+    // Theme toggle (persist)
+    (function(){
+        const key='ui-theme';
+        const root=document.documentElement;
+        const btn=document.getElementById('themeToggle');
+        const saved=localStorage.getItem(key);
+        if(saved==='dark'){ root.setAttribute('data-theme','dark'); }
+        btn?.addEventListener('click', ()=>{
+            const dark=root.getAttribute('data-theme')==='dark';
+            root.setAttribute('data-theme', dark ? 'light' : 'dark');
+            localStorage.setItem(key, dark ? 'light' : 'dark');
+        });
+        if(!saved && window.matchMedia('(prefers-color-scheme: dark)').matches){
+            root.setAttribute('data-theme','dark');
         }
+    })();
 
-        daysInput.addEventListener('input', updateDayPlans);
-        updateDayPlans();
-    </script>
+    // Dynamic Day Plans
+    const daysInput = document.getElementById('days');
+    const dayPlansContainer = document.getElementById('day-plans-container');
+    const oldDayPlans = @json(old('day_plans', []));
+    const accommodations = @json($accommodations);
+
+    function updateDayPlans() {
+        const days = parseInt(daysInput.value) || 1;
+        dayPlansContainer.innerHTML = '';
+
+        for (let i = 0; i < days; i++) {
+            const dayPlan = oldDayPlans[i] || {};
+            const dayPlanDiv = document.createElement('div');
+            dayPlanDiv.className = 'day-plan';
+            dayPlanDiv.innerHTML = `
+                <h4>Day ${i + 1}</h4>
+                <div class="form-group">
+                    <label for="day_plans[${i}][plan]">Plan</label>
+                    <textarea name="day_plans[${i}][plan]" id="day_plans[${i}][plan]" class="form-control">${dayPlan.plan || ''}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="day_plans[${i}][accommodation_id]">Accommodation</label>
+                    <select name="day_plans[${i}][accommodation_id]" id="day_plans[${i}][accommodation_id]" class="form-control">
+                        <option value="" ${!dayPlan.accommodation_id ? 'selected' : ''}>Select Accommodation</option>
+                        ${accommodations.map(accommodation => `
+                            <option value="${accommodation.id}" ${dayPlan.accommodation_id == accommodation.id ? 'selected' : ''}>
+                                ${accommodation.name} (${accommodation.province} - ${accommodation.district})
+                            </option>
+                        `).join('')}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="day_plans[${i}][description]">Description</label>
+                    <textarea name="day_plans[${i}][description]" id="day_plans[${i}][description]" class="form-control">${dayPlan.description || ''}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="day_plans[${i}][photos][]">Photos</label>
+                    <input type="file" name="day_plans[${i}][photos][]" id="day_plans[${i}][photos]" class="form-control-file" multiple>
+                </div>
+            `;
+            dayPlansContainer.appendChild(dayPlanDiv);
+        }
+    }
+
+    daysInput.addEventListener('input', updateDayPlans);
+    updateDayPlans();
+</script>
 @endsection
