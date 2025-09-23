@@ -186,7 +186,7 @@
 </div>
 
 <script>
-    // Theme toggle (persist preference)
+    
     (function(){
         const key = 'ui-theme';
         const root = document.documentElement;

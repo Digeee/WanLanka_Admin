@@ -334,8 +334,15 @@ body {
                     <span class="nav-label">Accommodations</span>
                 </a>
             </li>
+             <li>
+                <a href="{{ route('admin.bookings.index') }}"
+                class="{{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
+                    <i class="fas fa-calendar-check"></i>
+                    <span class="nav-label">Bookings</span>
+                </a>
+            </li>
             <li>
-                        <a href="{{ route('admin.ui_management.UI_index') }}"
+                <a href="{{ route('admin.ui_management.UI_index') }}"
                            class="{{ request()->routeIs('admin.ui_management.*') ? 'active' : '' }} nav-link">
                     <i class="fas fa-cog"></i>
                     <span class="nav-label">UI Settings</span>

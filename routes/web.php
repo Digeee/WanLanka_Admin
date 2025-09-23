@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PlaceController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\UIManagementController;
 use App\Http\Controllers\Admin\PackageController;
+use App\Http\Controllers\Admin\AdminBookingController;
 
 // Admin Routes
 Route::get('/', [AuthController::class, 'showAdminLoginForm'])->name('admin.login');  // Route for showing the login form
@@ -71,7 +72,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 
-
+Route::prefix('admin/bookings')->name('admin.bookings.')->group(function () {
+    Route::get('/', [AdminBookingController::class, 'index'])->name('index');
+    Route::get('/{id}/edit', [AdminBookingController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [AdminBookingController::class, 'update'])->name('update');
+    Route::delete('/{id}', [AdminBookingController::class, 'destroy'])->name('destroy');
+});
 
 
 Route::get('/', function () {

@@ -24,4 +24,9 @@ class Vehicle extends Model
     protected $casts = [
         'seat_count' => 'integer',
     ];
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'vehicle_id', 'id');
+    }
 }
