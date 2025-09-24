@@ -8,6 +8,7 @@ use App\Models\Vehicle;
 use App\Models\Accommodation;
 use App\Models\Place;
 use App\Models\Package;
+use App\Models\User;
 
 class DashboardController extends Controller
 {
@@ -18,7 +19,8 @@ class DashboardController extends Controller
         $accommodationCount = Accommodation::count();
         $placeCount = Place::count();
         $packageCount = Package::count();
+        $userCount = User::count();
 
-        return view('admin.dashboard', compact('guiderCount', 'vehicleCount', 'accommodationCount', 'placeCount', 'packageCount'));
+        return view('admin.dashboard', compact('guiderCount', 'vehicleCount', 'accommodationCount', 'placeCount', 'packageCount', 'userCount'));
     }
 }

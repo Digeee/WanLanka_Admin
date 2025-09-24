@@ -182,11 +182,15 @@
             <h3>Total Packages</h3>
             <p>{{ $packageCount }}</p>
         </div>
+        <div class="stat t-green">
+            <h3>Total Users</h3>
+            <p>{{ $userCount }}</p>
+        </div>
     </div>
 </div>
 
 <script>
-    
+
     (function(){
         const key = 'ui-theme';
         const root = document.documentElement;
