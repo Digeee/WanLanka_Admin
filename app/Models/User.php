@@ -2,43 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name', 'email', 'password', 'dob', 'address', 'city', 'district', 'province', 'country',
+        'phone', 'emergency_name', 'emergency_phone', 'id_type', 'id_number', 'id_image',
+        'profile_photo', 'preferred_language', 'marketing_opt_in', 'accept_terms', 'is_verified',
+        'otp', 'otp_attempts', 'otp_expires_at', 'email_verified_at', 'remember_token',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
+        'marketing_opt_in' => 'boolean',
+        'accept_terms' => 'boolean',
+        'is_verified' => 'boolean',
+        'otp_expires_at' => 'datetime',
         'email_verified_at' => 'datetime',
+        'dob' => 'date',
+    ];
+
+    protected $hidden = [
+        'password', 'remember_token', 'otp', 'otp_attempts', 'otp_expires_at',
     ];
 }

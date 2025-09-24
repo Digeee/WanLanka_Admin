@@ -307,11 +307,12 @@ body {
                     </li>
 
             <li>
-                <a href="#">
-                    <i class="fas fa-users"></i>
-                    <span class="nav-label">Manage Users</span>
-                </a>
-            </li>
+        <a href="{{ route('admin.users.index') }}"
+           class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+            <i class="fas fa-users"></i>
+            <span class="nav-label">Manage Users</span>
+        </a>
+    </li>
 
           <li>
                 <a href="{{ route('admin.guiders.index') }}"

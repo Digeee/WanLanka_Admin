@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\UIManagementController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\AdminBookingController;
+use App\Http\Controllers\Admin\UserController;
 
 // Admin Routes
 Route::get('/', [AuthController::class, 'showAdminLoginForm'])->name('admin.login');  // Route for showing the login form
@@ -78,6 +79,18 @@ Route::prefix('admin/bookings')->name('admin.bookings.')->group(function () {
     Route::put('/{id}', [AdminBookingController::class, 'update'])->name('update');
     Route::delete('/{id}', [AdminBookingController::class, 'destroy'])->name('destroy');
 });
+
+
+Route::prefix('admin/users')->name('admin.users.')->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('index');
+    Route::get('/create', [UserController::class, 'create'])->name('create');
+    Route::post('/', [UserController::class, 'store'])->name('store');
+    Route::get('/{id}', [UserController::class, 'show'])->name('show');
+    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [UserController::class, 'update'])->name('update');
+    Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+});
+
 
 
 Route::get('/', function () {
