@@ -342,6 +342,13 @@ body {
                     <span class="nav-label">Bookings</span>
                 </a>
             </li>
+             <li>
+                <a href="{{ route('admin.bookings.index') }}"
+                class="{{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
+                    <i class="fas fa-handshake"></i>
+                <span class="nav-label">Offers</span>
+                </a>
+            </li>
             <li>
                 <a href="{{ route('admin.ui_management.UI_index') }}"
                            class="{{ request()->routeIs('admin.ui_management.*') ? 'active' : '' }} nav-link">
