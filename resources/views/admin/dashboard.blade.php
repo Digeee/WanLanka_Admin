@@ -48,7 +48,7 @@
     .breadcrumbs a{ color:inherit; text-decoration:none; }
     .actions{ display:flex; gap:10px; flex-wrap:wrap; }
 
-    /* ====== Buttons (your unified style) ====== */
+    /* ====== Buttons ====== */
     .btn{
         --fg:var(--text); --bd:var(--ring); --fill:color-mix(in oklab,var(--panel),transparent 10%);
         --shine:linear-gradient(115deg,transparent 0%,rgba(255,255,255,.16) 45%,rgba(255,255,255,.28) 55%,transparent 70%);
@@ -111,19 +111,10 @@
     .stat h3{ margin:0 0 8px; font-size:13px; letter-spacing:.4px; text-transform:uppercase; color:var(--muted); font-weight:800; }
     .stat p{ margin:0; font-size:32px; font-weight:900; letter-spacing:.2px; color:var(--text); }
 
-    /* tinted variants */
-    .t-blue{ background:
-        radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--accent), transparent 86%), transparent 60%),
-        var(--panel); }
-    .t-green{ background:
-        radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--accent-2), transparent 86%), transparent 60%),
-        var(--panel); }
-    .t-purple{ background:
-        radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--purple), transparent 86%), transparent 60%),
-        var(--panel); }
-    .t-amber{ background:
-        radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--warning), transparent 86%), transparent 60%),
-        var(--panel); }
+    .t-blue{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--accent), transparent 86%), transparent 60%), var(--panel); }
+    .t-green{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--accent-2), transparent 86%), transparent 60%), var(--panel); }
+    .t-purple{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--purple), transparent 86%), transparent 60%), var(--panel); }
+    .t-amber{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--warning), transparent 86%), transparent 60%), var(--panel); }
 
     [data-theme="dark"] .stat{
         border-color: var(--ring);
@@ -133,19 +124,136 @@
         box-shadow:0 12px 38px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
     }
     [data-theme="dark"] .t-green{
-        background:
-          radial-gradient(260px 140px at -10% -30%, rgba(52,211,153,.18), transparent 60%),
-          linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+        background: radial-gradient(260px 140px at -10% -30%, rgba(52,211,153,.18), transparent 60%), linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
     }
     [data-theme="dark"] .t-purple{
-        background:
-          radial-gradient(260px 140px at -10% -30%, rgba(167,139,250,.18), transparent 60%),
-          linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+        background: radial-gradient(260px 140px at -10% -30%, rgba(167,139,250,.18), transparent 60%), linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
     }
     [data-theme="dark"] .t-amber{
-        background:
-          radial-gradient(260px 140px at -10% -30%, rgba(251,191,36,.18), transparent 60%),
-          linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+        background: radial-gradient(260px 140px at -10% -30%, rgba(251,191,36,.18), transparent 60%), linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+    }
+
+    /* ====== Dashboard Grid ====== */
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 24px;
+    }
+    @media (min-width: 900px) {
+        .dashboard-grid {
+            grid-template-columns: 2fr 1fr;
+        }
+    }
+
+    /* ====== Panels ====== */
+    .panel {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: var(--shadow-1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .panel:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-2);
+    }
+    [data-theme="dark"] .panel {
+        border-color: var(--ring);
+        background: linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+        box-shadow: 0 12px 38px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
+    }
+
+    .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+    .panel-title {
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--text);
+    }
+
+    /* ====== Chart Container ====== */
+    .chart-container {
+        height: 280px;
+        position: relative;
+    }
+
+    /* ====== Activity & Notification Items ====== */
+    .activity-item, .notification-item {
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        gap: 12px;
+    }
+    [data-theme="dark"] .activity-item,
+    [data-theme="dark"] .notification-item {
+        border-color: var(--ring);
+    }
+    .activity-item:last-child,
+    .notification-item:last-child {
+        border: none;
+    }
+    .activity-icon, .notification-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .activity-text, .notification-text {
+        flex: 1;
+    }
+    .activity-title, .notification-title {
+        font-weight: 700;
+        margin: 0 0 4px;
+        font-size: 14px;
+    }
+    .activity-desc, .notification-desc {
+        font-size: 13px;
+        color: var(--muted);
+    }
+    .activity-time, .notification-time {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 4px;
+    }
+    .notification-badge {
+        background: var(--danger);
+        color: white;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-weight: 800;
+    }
+    .notification-dismiss {
+        background: none;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 18px;
+        margin-left: 8px;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+    }
+    .notification-dismiss:hover {
+        opacity: 1;
+        color: var(--danger);
+    }
+
+    /* ====== Fade-in Animation ====== */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+        animation: fadeIn 0.5s ease forwards;
     }
 </style>
 
@@ -162,35 +270,102 @@
     </div>
 
     <div class="stats">
-        <div class="stat t-blue">
+        <div class="stat t-blue fade-in" style="animation-delay: 0.1s">
             <h3>Total Guiders</h3>
             <p>{{ $guiderCount }}</p>
         </div>
-        <div class="stat t-purple">
+        <div class="stat t-purple fade-in" style="animation-delay: 0.2s">
             <h3>Total Vehicles</h3>
             <p>{{ $vehicleCount }}</p>
         </div>
-        <div class="stat t-green">
+        <div class="stat t-green fade-in" style="animation-delay: 0.3s">
             <h3>Total Accommodations</h3>
             <p>{{ $accommodationCount }}</p>
         </div>
-        <div class="stat t-amber">
+        <div class="stat t-amber fade-in" style="animation-delay: 0.4s">
             <h3>Total Places</h3>
             <p>{{ $placeCount }}</p>
         </div>
-        <div class="stat t-green">
+        <div class="stat t-green fade-in" style="animation-delay: 0.5s">
             <h3>Total Packages</h3>
             <p>{{ $packageCount }}</p>
         </div>
-        <div class="stat t-green">
+        <div class="stat t-green fade-in" style="animation-delay: 0.6s">
             <h3>Total Users</h3>
             <p>{{ $userCount }}</p>
         </div>
     </div>
+
+    <div class="dashboard-grid">
+        <!-- Main Content: Chart + Recent Activity -->
+        <div>
+            <!-- Chart Panel -->
+            <div class="panel fade-in" style="animation-delay: 0.7s">
+                <div class="panel-header">
+                    <h2 class="panel-title">Bookings Overview (Last 6 Months)</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="bookingsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="panel fade-in" style="animation-delay: 0.8s; margin-top: 20px;">
+                <div class="panel-header">
+                    <h2 class="panel-title">Recent Activity</h2>
+                </div>
+                <div class="activity-list">
+                    @foreach($recentActivities as $activity)
+                        <div class="activity-item">
+                            <div class="activity-icon" style="background: color-mix(in oklab, var(--accent), transparent 80%);">
+                                <i class="fas fa-bell" style="color: var(--accent);"></i>
+                            </div>
+                            <div class="activity-text">
+                                <h4 class="activity-title">{{ $activity['title'] }}</h4>
+                                <p class="activity-desc">{{ $activity['description'] }}</p>
+                                <p class="activity-time">{{ $activity['time']->diffForHumans() }}</p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar: Notifications -->
+        <div>
+            <div class="panel fade-in" style="animation-delay: 0.9s">
+                <div class="panel-header">
+                    <h2 class="panel-title">Notifications</h2>
+                    @if($unreadNotificationsCount > 0)
+                        <span class="notification-badge">{{ $unreadNotificationsCount }}</span>
+                    @endif
+                </div>
+                <div class="notification-list">
+                    @forelse($notifications as $note)
+                        <div class="notification-item">
+                            <div class="notification-icon" style="background: color-mix(in oklab, {{ $note['type'] === 'booking' ? 'var(--accent-2)' : 'var(--purple)' }}, transparent 80%);">
+                                <i class="fas fa-{{ $note['type'] === 'booking' ? 'calendar-check' : 'user-plus' }}" style="color: {{ $note['type'] === 'booking' ? 'var(--accent-2)' : 'var(--purple)' }};"></i>
+                            </div>
+                            <div class="notification-text">
+                                <h4 class="notification-title">{{ $note['title'] }}</h4>
+                                <p class="notification-desc">{{ $note['message'] }}</p>
+                                <p class="notification-time">{{ $note['created_at']->diffForHumans() }}</p>
+                            </div>
+                            <button class="notification-dismiss" title="Dismiss">×</button>
+                        </div>
+                    @empty
+                        <p style="color: var(--muted); font-style: italic;">No notifications.</p>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<script>
     (function(){
         const key = 'ui-theme';
         const root = document.documentElement;
@@ -206,5 +381,58 @@
             root.setAttribute('data-theme','dark');
         }
     })();
+
+    // Sample Chart Data (replace with real data from backend)
+    const ctx = document.getElementById('bookingsChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Bookings',
+                data: [12, 19, 15, 22, 30, 28],
+                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(),
+                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() + '20',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--panel').trim(),
+                pointBorderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(),
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: getComputedStyle(document.documentElement).getPropertyValue('--text').trim(),
+                        font: { size: 12 }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'transparent' },
+                    ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() }
+                },
+                y: {
+                    grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--border').trim() },
+                    ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() }
+                }
+            }
+        }
+    });
+
+    // Notification Dismiss
+    document.querySelectorAll('.notification-dismiss').forEach(btn => {
+        btn.addEventListener('click', function() {
+            this.closest('.notification-item').style.opacity = '0';
+            setTimeout(() => this.closest('.notification-item').remove(), 300);
+        });
+    });
 </script>
 @endsection
