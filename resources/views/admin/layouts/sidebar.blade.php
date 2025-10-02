@@ -350,6 +350,13 @@ body {
                 </a>
             </li>
             <li>
+        <a href="{{ route('admin.places.user-sent.index') }}"
+   class="{{ request()->routeIs('admin.places.user-sent.*') ? 'active' : '' }}">
+   <i class="fas fa-map-marker-alt"></i>
+   <span class="nav-label">User Sent Places</span>
+</a>
+    </li>
+            <li>
                 <a href="{{ route('admin.ui_management.UI_index') }}"
                            class="{{ request()->routeIs('admin.ui_management.*') ? 'active' : '' }} nav-link">
                     <i class="fas fa-cog"></i>
@@ -365,4 +372,3 @@ body {
             </button>
         </div>
     </nav>
-

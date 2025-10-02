@@ -17,7 +17,6 @@
         --radius: 16px;
         --shadow-1: 0 10px 20px rgba(2,6,23,.06);
         --shadow-2: 0 18px 40px rgba(2,6,23,.08);
-        --glass: blur(10px) saturate(1.05);
     }
     [data-theme="dark"]{
         --bg: #0b1220;
@@ -113,8 +112,8 @@
 
     /* Alerts */
     .alert{ border-radius:12px; padding:12px 14px; font-weight:700; margin-bottom:20px; }
-    .alert-danger{ color:#991b1b; background:#fef2f2; border:1px solid #fecaca; }
-    [data-theme="dark"] .alert-danger{ color:#fca5a5; background:rgba(153,27,27,.15); border:1px solid #7f1d1d; }
+    .alert-success{ color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0; }
+    [data-theme="dark"] .alert-success{ color:#bbf7d0; background:rgba(6,95,70,.15); border:1px solid #134e4a; }
 
     /* Form Controls */
     .form-group{ margin-bottom:20px; }
@@ -143,7 +142,7 @@
         background: color-mix(in oklab, var(--panel), transparent 2%);
         color: var(--text); font-size:15px;
         appearance: none;
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        background-image: url("image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
         background-repeat: no-repeat;
         background-position: right 12px center;
         background-size: 16px 12px;
@@ -156,169 +155,135 @@
     [data-theme="dark"] .form-select{
         background-color: color-mix(in oklab, var(--panel), transparent 6%);
         border-color: var(--ring);
-        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+        background-image: url("image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
     }
 
-    .form-check-input{
-        width:18px; height:18px; margin-top:4px; accent-color: var(--accent);
+    /* Image Preview */
+    .image-preview{
+        width:150px; height:150px; object-fit:cover; border-radius:12px;
+        border:1px solid var(--border); display:block; margin-bottom:12px;
     }
 
     /* Action Buttons */
     .form-actions{ display:flex; gap:12px; margin-top:24px; flex-wrap:wrap; }
 </style>
 
-<div class="shell" id="user-edit-root">
+<div class="shell" id="user-sent-place-edit">
     <div class="page-header">
         <div>
             <div class="breadcrumbs">
-                <a href="{{ route('admin.users.index') }}">Users</a> / <span>Edit</span>
+                <a href="{{ route('admin.places.user-sent.index') }}">Places</a> / <span>Edit</span>
             </div>
-            <h1 class="title">Edit User #{{ $user->id }}</h1>
+            <h1 class="title">Edit User-Sent Place #{{ $place->id }}</h1>
         </div>
         <div class="actions">
             <button class="btn btn-primary" id="themeToggle" type="button">Theme</button>
         </div>
     </div>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul style="margin:0; padding-left:20px;">
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
     <div class="panel">
-        <div class="panel-header">User Details</div>
+        <div class="panel-header">Edit Place Details</div>
         <div class="panel-body">
-            <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
+            <form action="{{ route('admin.places.user-sent.update', $place->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
 
+                <!-- User Info (Read-only) -->
                 <div class="form-group">
-                    <label for="name" class="form-label">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->name) }}" required>
+                    <label for="user_name" class="form-label">User Name</label>
+                    <input type="text" class="form-control" id="user_name" name="user_name"
+                           value="{{ $place->user_name }}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="user_email" class="form-label">User Email</label>
+                    <input type="text" class="form-control" id="user_email" name="user_email"
+                           value="{{ $place->user_email }}" readonly>
+                </div>
+
+                <!-- Place Fields -->
+                <div class="form-group">
+                    <label for="place_name" class="form-label">Place Name</label>
+                    <input type="text" class="form-control" id="place_name" name="place_name"
+                           value="{{ old('place_name', $place->place_name) }}" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}" required>
+                    <label for="image" class="form-label">Image</label>
+                    @if($place->image)
+                        <img src="{{ asset('storage/' . $place->image) }}" alt="Current Image" class="image-preview">
+                    @endif
+                    <input type="file" class="form-control" id="image" name="image" accept="image/*">
                 </div>
 
                 <div class="form-group">
-                    <label for="password" class="form-label">Password (leave blank to keep unchanged)</label>
-                    <input type="password" class="form-control" id="password" name="password">
-                </div>
-
-                <div class="form-group">
-                    <label for="password_confirmation" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
-                </div>
-
-                <div class="form-group">
-                    <label for="dob" class="form-label">Date of Birth</label>
-                    <input type="date" class="form-control" id="dob" name="dob" value="{{ old('dob', $user->dob) }}">
-                </div>
-
-                <div class="form-group">
-                    <label for="address" class="form-label">Address</label>
-                    <input type="text" class="form-control" id="address" name="address" value="{{ old('address', $user->address) }}">
-                </div>
-
-                <div class="form-group">
-                    <label for="city" class="form-label">City</label>
-                    <input type="text" class="form-control" id="city" name="city" value="{{ old('city', $user->city) }}">
-                </div>
-
-                <div class="form-group">
-                    <label for="district" class="form-label">District</label>
-                    <select class="form-select" id="district" name="district">
-                        <option value="">Select District</option>
-                        @foreach([
-                            'Colombo','Gampaha','Kalutara','Kandy','Matale','Nuwara Eliya',
-                            'Galle','Matara','Hambantota','Jaffna','Mannar','Vavuniya',
-                            'Mullaitivu','Kilinochchi','Batticaloa','Ampara','Trincomalee',
-                            'Kurunegala','Puttalam','Anuradhapura','Polonnaruwa','Badulla',
-                            'Monaragala','Ratnapura','Kegalle'
-                        ] as $dist)
-                            <option value="{{ $dist }}" {{ old('district', $user->district) == $dist ? 'selected' : '' }}>{{ $dist }}</option>
-                        @endforeach
-                    </select>
+                    <label for="google_map_link" class="form-label">Google Map Link</label>
+                    <input type="url" class="form-control" id="google_map_link" name="google_map_link"
+                           value="{{ old('google_map_link', $place->google_map_link) }}" required>
                 </div>
 
                 <div class="form-group">
                     <label for="province" class="form-label">Province</label>
-                    <input type="text" class="form-control" id="province" name="province" value="{{ old('province', $user->province) }}">
+                    <input type="text" class="form-control" id="province" name="province"
+                           value="{{ old('province', $place->province) }}" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="country" class="form-label">Country</label>
-                    <input type="text" class="form-control" id="country" name="country" value="{{ old('country', $user->country) }}">
+                    <label for="district" class="form-label">District</label>
+                    <input type="text" class="form-control" id="district" name="district"
+                           value="{{ old('district', $place->district) }}" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="phone" class="form-label">Phone</label>
-                    <input type="text" class="form-control" id="phone" name="phone" value="{{ old('phone', $user->phone) }}">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" id="location" name="location"
+                           value="{{ old('location', $place->location) }}" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="emergency_name" class="form-label">Emergency Contact Name</label>
-                    <input type="text" class="form-control" id="emergency_name" name="emergency_name" value="{{ old('emergency_name', $user->emergency_name) }}">
+                    <label for="nearest_city" class="form-label">Nearest City</label>
+                    <input type="text" class="form-control" id="nearest_city" name="nearest_city"
+                           value="{{ old('nearest_city', $place->nearest_city) }}" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="emergency_phone" class="form-label">Emergency Contact Phone</label>
-                    <input type="text" class="form-control" id="emergency_phone" name="emergency_phone" value="{{ old('emergency_phone', $user->emergency_phone) }}">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="5" required>{{ old('description', $place->description) }}</textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="id_type" class="form-label">ID Type</label>
-                    <select class="form-select" id="id_type" name="id_type">
-                        <option value="">Select ID Type</option>
-                        <option value="NIC" {{ old('id_type', $user->id_type) == 'NIC' ? 'selected' : '' }}>NIC</option>
-                        <option value="Passport" {{ old('id_type', $user->id_type) == 'Passport' ? 'selected' : '' }}>Passport</option>
-                        <option value="Driving License" {{ old('id_type', $user->id_type) == 'Driving License' ? 'selected' : '' }}>Driving License</option>
+                    <label for="best_suited_for" class="form-label">Best Suited For</label>
+                    <input type="text" class="form-control" id="best_suited_for" name="best_suited_for"
+                           value="{{ old('best_suited_for', $place->best_suited_for) }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="activities_offered" class="form-label">Activities Offered</label>
+                    <input type="text" class="form-control" id="activities_offered" name="activities_offered"
+                           value="{{ old('activities_offered', $place->activities_offered) }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="rating" class="form-label">Rating (1-5)</label>
+                    <input type="number" class="form-control" id="rating" name="rating" min="1" max="5"
+                           value="{{ old('rating', $place->rating) }}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status" required>
+                        <option value="pending" {{ old('status', $place->status) == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="approved" {{ old('status', $place->status) == 'approved' ? 'selected' : '' }}>Approved</option>
+                        <option value="rejected" {{ old('status', $place->status) == 'rejected' ? 'selected' : '' }}>Rejected</option>
                     </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="id_number" class="form-label">ID Number</label>
-                    <input type="text" class="form-control" id="id_number" name="id_number" value="{{ old('id_number', $user->id_number) }}">
-                </div>
-
-                <div class="form-group">
-                    <label for="preferred_language" class="form-label">Preferred Language</label>
-                    <select class="form-select" id="preferred_language" name="preferred_language">
-                        <option value="">Select Language</option>
-                        <option value="English" {{ old('preferred_language', $user->preferred_language) == 'English' ? 'selected' : '' }}>English</option>
-                        <option value="Tamil" {{ old('preferred_language', $user->preferred_language) == 'Tamil' ? 'selected' : '' }}>Tamil</option>
-                        <option value="Sinhala" {{ old('preferred_language', $user->preferred_language) == 'Sinhala' ? 'selected' : '' }}>Sinhala</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label d-block">Preferences</label>
-                    <div style="display:flex; gap:24px; flex-wrap:wrap;">
-                        <div class="form-check" style="display:flex; align-items:center; gap:8px;">
-                            <input type="checkbox" class="form-check-input" id="marketing_opt_in" name="marketing_opt_in" value="1" {{ old('marketing_opt_in', $user->marketing_opt_in) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="marketing_opt_in">Marketing Opt-In</label>
-                        </div>
-                        <div class="form-check" style="display:flex; align-items:center; gap:8px;">
-                            <input type="checkbox" class="form-check-input" id="accept_terms" name="accept_terms" value="1" {{ old('accept_terms', $user->accept_terms) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="accept_terms">Accept Terms</label>
-                        </div>
-                        <div class="form-check" style="display:flex; align-items:center; gap:8px;">
-                            <input type="checkbox" class="form-check-input" id="is_verified" name="is_verified" value="1" {{ old('is_verified', $user->is_verified) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="is_verified">Verified</label>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Update User</button>
-                    <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <a href="{{ route('admin.places.user-sent.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

@@ -25,6 +25,7 @@ class UserController extends Controller
                 'id_image' => $user->id_image ? asset('storage/' . $user->id_image) : null,
             ];
         });
+         $users = User::paginate(15);
         return view('admin.users.index', compact('users'));
     }
 
