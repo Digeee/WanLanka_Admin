@@ -6,7 +6,7 @@
     :root{
         --bg:#f8fafc; --panel:#ffffff; --muted:#64748b; --text:#0f172a;
         --border:#e2e8f0; --ring:#cbd5e1; --accent:#3b82f6; --accent-2:#22c55e;
-        --danger:#ef4444; --warning:#f59e0b; --purple:#8b5cf6;
+        --danger:#ef4444; --warning:#f59e0b; --purple:#8b5cf6; --pink:#ec4899;
         --radius:16px;
         --shadow-1:0 10px 20px rgba(2,6,23,.06);
         --shadow-2:0 18px 40px rgba(2,6,23,.12);
@@ -15,13 +15,13 @@
     [data-theme="dark"]{
         --bg:#0b1220; --panel:#0f172a; --muted:#94a3b8; --text:#e5e7eb;
         --border:#1f2937; --ring:#334155; --accent:#60a5fa; --accent-2:#34d399;
-        --danger:#f87171; --warning:#fbbf24; --purple:#a78bfa;
+        --danger:#f87171; --warning:#fbbf24; --purple:#a78bfa; --pink:#f472b6;
         --shadow-1:0 10px 22px rgba(0,0,0,.35);
         --shadow-2:0 22px 50px rgba(0,0,0,.45);
     }
 
     /* ====== Page Shell ====== */
-    .shell{ max-width:1200px; margin:28px auto 80px; padding:0 20px; color:var(--text); }
+    .shell{ max-width:1400px; margin:28px auto 80px; padding:0 20px; color:var(--text); }
     body{
         background:
            radial-gradient(1200px 600px at 10% -10%, color-mix(in oklab, var(--accent), transparent 94%), transparent),
@@ -96,8 +96,7 @@
     .btn-neutral:hover{ --fill:color-mix(in oklab,var(--panel),transparent 0%); --fg:var(--text); }
 
     /* ====== Stat Cards ====== */
-    .stats{ display:grid; gap:14px; grid-template-columns: 1fr; }
-    @media (min-width: 900px){ .stats{ grid-template-columns: repeat(4, minmax(0,1fr)); } }
+    .stats{ display:grid; gap:14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-bottom:24px; }
 
     .stat{
         position:relative; border:1px solid var(--border); border-radius:18px; padding:16px; overflow:hidden;
@@ -106,15 +105,22 @@
           var(--panel);
         box-shadow:var(--shadow-1);
         transition:transform .08s ease, box-shadow .25s ease;
+        display:flex; flex-direction:column; justify-content:space-between;
     }
     .stat:hover{ transform: translateY(-2px); box-shadow:var(--shadow-2); }
     .stat h3{ margin:0 0 8px; font-size:13px; letter-spacing:.4px; text-transform:uppercase; color:var(--muted); font-weight:800; }
     .stat p{ margin:0; font-size:32px; font-weight:900; letter-spacing:.2px; color:var(--text); }
+    .stat-icon{
+        position:absolute; right:16px; top:16px; width:48px; height:48px; border-radius:12px;
+        display:flex; align-items:center; justify-content:center; font-size:20px;
+        background:color-mix(in oklab, var(--accent), transparent 85%); color:var(--accent);
+    }
 
     .t-blue{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--accent), transparent 86%), transparent 60%), var(--panel); }
     .t-green{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--accent-2), transparent 86%), transparent 60%), var(--panel); }
     .t-purple{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--purple), transparent 86%), transparent 60%), var(--panel); }
     .t-amber{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--warning), transparent 86%), transparent 60%), var(--panel); }
+    .t-pink{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--pink), transparent 86%), transparent 60%), var(--panel); }
 
     [data-theme="dark"] .stat{
         border-color: var(--ring);
@@ -132,6 +138,9 @@
     [data-theme="dark"] .t-amber{
         background: radial-gradient(260px 140px at -10% -30%, rgba(251,191,36,.18), transparent 60%), linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
     }
+    [data-theme="dark"] .t-pink{
+        background: radial-gradient(260px 140px at -10% -30%, rgba(236,72,153,.18), transparent 60%), linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+    }
 
     /* ====== Dashboard Grid ====== */
     .dashboard-grid {
@@ -140,7 +149,7 @@
         gap: 20px;
         margin-top: 24px;
     }
-    @media (min-width: 900px) {
+    @media (min-width: 1200px) {
         .dashboard-grid {
             grid-template-columns: 2fr 1fr;
         }
@@ -247,6 +256,60 @@
         color: var(--danger);
     }
 
+    /* ====== Quick Actions ====== */
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    .action-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px;
+        text-align: center;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: var(--text);
+    }
+    .action-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-2);
+        border-color: var(--accent);
+    }
+    .action-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+        color: var(--accent);
+    }
+    .action-title {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* ====== Mini Charts ====== */
+    .mini-chart {
+        height: 60px;
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    /* ====== Progress Bars ====== */
+    .progress-bar {
+        height: 6px;
+        background: var(--border);
+        border-radius: 3px;
+        overflow: hidden;
+        margin-top: 8px;
+    }
+    .progress-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.5s ease;
+    }
+
     /* ====== Fade-in Animation ====== */
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(10px); }
@@ -254,6 +317,30 @@
     }
     .fade-in {
         animation: fadeIn 0.5s ease forwards;
+    }
+
+    /* ====== Pulse Animation ====== */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    .pulse {
+        animation: pulse 2s infinite;
+    }
+
+    /* ====== Stats Grid ====== */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 24px;
+    }
+
+    /* ====== Resource Distribution ====== */
+    .distribution-chart {
+        height: 200px;
+        position: relative;
     }
 </style>
 
@@ -269,56 +356,131 @@
         </div>
     </div>
 
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <a href="{{ route('admin.guiders.index') }}" class="action-card fade-in" style="animation-delay: 0.1s">
+            <div class="action-icon">👨‍💼</div>
+            <div class="action-title">Manage Guiders</div>
+        </a>
+        <a href="{{ route('admin.vehicles.index') }}" class="action-card fade-in" style="animation-delay: 0.2s">
+            <div class="action-icon">🚗</div>
+            <div class="action-title">Manage Vehicles</div>
+        </a>
+        <a href="{{ route('admin.accommodations.index') }}" class="action-card fade-in" style="animation-delay: 0.3s">
+            <div class="action-icon">🏨</div>
+            <div class="action-title">Manage Accommodations</div>
+        </a>
+        <a href="{{ route('admin.places.index') }}" class="action-card fade-in" style="animation-delay: 0.4s">
+            <div class="action-icon">🏞️</div>
+            <div class="action-title">Manage Places</div>
+        </a>
+        <a href="{{ route('admin.packages.index') }}" class="action-card fade-in" style="animation-delay: 0.5s">
+            <div class="action-icon">📦</div>
+            <div class="action-title">Manage Packages</div>
+        </a>
+        <a href="{{ route('admin.users.index') }}" class="action-card fade-in" style="animation-delay: 0.6s">
+            <div class="action-icon">👥</div>
+            <div class="action-title">Manage Users</div>
+        </a>
+    </div>
+
+    <!-- Stats Overview -->
     <div class="stats">
         <div class="stat t-blue fade-in" style="animation-delay: 0.1s">
             <h3>Total Guiders</h3>
             <p>{{ $guiderCount }}</p>
+            <div class="stat-icon">👨‍💼</div>
+            <div class="mini-chart">
+                <canvas id="guiderChart"></canvas>
+            </div>
         </div>
         <div class="stat t-purple fade-in" style="animation-delay: 0.2s">
             <h3>Total Vehicles</h3>
             <p>{{ $vehicleCount }}</p>
+            <div class="stat-icon">🚗</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 75%; background: var(--purple);"></div>
+            </div>
         </div>
         <div class="stat t-green fade-in" style="animation-delay: 0.3s">
             <h3>Total Accommodations</h3>
             <p>{{ $accommodationCount }}</p>
+            <div class="stat-icon">🏨</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 60%; background: var(--accent-2);"></div>
+            </div>
         </div>
         <div class="stat t-amber fade-in" style="animation-delay: 0.4s">
             <h3>Total Places</h3>
             <p>{{ $placeCount }}</p>
+            <div class="stat-icon">🏞️</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 85%; background: var(--warning);"></div>
+            </div>
         </div>
-        <div class="stat t-green fade-in" style="animation-delay: 0.5s">
+        <div class="stat t-pink fade-in" style="animation-delay: 0.5s">
             <h3>Total Packages</h3>
             <p>{{ $packageCount }}</p>
+            <div class="stat-icon">📦</div>
+            <div class="mini-chart">
+                <canvas id="packageChart"></canvas>
+            </div>
         </div>
-        <div class="stat t-green fade-in" style="animation-delay: 0.6s">
+        <div class="stat t-blue fade-in" style="animation-delay: 0.6s">
             <h3>Total Users</h3>
             <p>{{ $userCount }}</p>
+            <div class="stat-icon">👥</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 90%; background: var(--accent);"></div>
+            </div>
         </div>
     </div>
 
     <div class="dashboard-grid">
-        <!-- Main Content: Chart + Recent Activity -->
+        <!-- Main Content: Charts + Recent Activity -->
         <div>
-            <!-- Chart Panel -->
-            <div class="panel fade-in" style="animation-delay: 0.7s">
-                <div class="panel-header">
-                    <h2 class="panel-title">Bookings Overview (Last 6 Months)</h2>
+            <!-- Charts Row -->
+            <div class="stats-grid">
+                <!-- Bookings Chart -->
+                <div class="panel fade-in" style="animation-delay: 0.7s">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Bookings Overview</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="bookingsChart"></canvas>
+                    </div>
                 </div>
-                <div class="chart-container">
-                    <canvas id="bookingsChart"></canvas>
+
+                <!-- Resource Distribution -->
+                <div class="panel fade-in" style="animation-delay: 0.8s">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Resource Distribution</h2>
+                    </div>
+                    <div class="distribution-chart">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
                 </div>
             </div>
 
             <!-- Recent Activity -->
-            <div class="panel fade-in" style="animation-delay: 0.8s; margin-top: 20px;">
+            <div class="panel fade-in" style="animation-delay: 0.9s; margin-top: 20px;">
                 <div class="panel-header">
                     <h2 class="panel-title">Recent Activity</h2>
+                    <a href="#" style="font-size: 12px; color: var(--accent); text-decoration: none;">View All</a>
                 </div>
                 <div class="activity-list">
                     @foreach($recentActivities as $activity)
                         <div class="activity-item">
                             <div class="activity-icon" style="background: color-mix(in oklab, var(--accent), transparent 80%);">
-                                <i class="fas fa-bell" style="color: var(--accent);"></i>
+                                @if($activity['type'] === 'guider')
+                                    👨‍💼
+                                @elseif($activity['type'] === 'user')
+                                    👥
+                                @elseif($activity['type'] === 'package')
+                                    📦
+                                @else
+                                    🔔
+                                @endif
                             </div>
                             <div class="activity-text">
                                 <h4 class="activity-title">{{ $activity['title'] }}</h4>
@@ -331,20 +493,25 @@
             </div>
         </div>
 
-        <!-- Sidebar: Notifications -->
+        <!-- Sidebar: Notifications + Performance -->
         <div>
-            <div class="panel fade-in" style="animation-delay: 0.9s">
+            <!-- Notifications -->
+            <div class="panel fade-in" style="animation-delay: 1.0s">
                 <div class="panel-header">
                     <h2 class="panel-title">Notifications</h2>
                     @if($unreadNotificationsCount > 0)
-                        <span class="notification-badge">{{ $unreadNotificationsCount }}</span>
+                        <span class="notification-badge pulse">{{ $unreadNotificationsCount }}</span>
                     @endif
                 </div>
                 <div class="notification-list">
                     @forelse($notifications as $note)
                         <div class="notification-item">
                             <div class="notification-icon" style="background: color-mix(in oklab, {{ $note['type'] === 'booking' ? 'var(--accent-2)' : 'var(--purple)' }}, transparent 80%);">
-                                <i class="fas fa-{{ $note['type'] === 'booking' ? 'calendar-check' : 'user-plus' }}" style="color: {{ $note['type'] === 'booking' ? 'var(--accent-2)' : 'var(--purple)' }};"></i>
+                                @if($note['type'] === 'booking')
+                                    📅
+                                @else
+                                    👤
+                                @endif
                             </div>
                             <div class="notification-text">
                                 <h4 class="notification-title">{{ $note['title'] }}</h4>
@@ -354,8 +521,44 @@
                             <button class="notification-dismiss" title="Dismiss">×</button>
                         </div>
                     @empty
-                        <p style="color: var(--muted); font-style: italic;">No notifications.</p>
+                        <p style="color: var(--muted); font-style: italic; text-align: center; padding: 20px;">No notifications</p>
                     @endforelse
+                </div>
+            </div>
+
+            <!-- Performance Metrics -->
+            <div class="panel fade-in" style="animation-delay: 1.1s; margin-top: 20px;">
+                <div class="panel-header">
+                    <h2 class="panel-title">Performance</h2>
+                </div>
+                <div class="performance-metrics">
+                    <div class="metric">
+                        <div class="metric-header">
+                            <span>System Uptime</span>
+                            <span>99.8%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 99.8%; background: var(--accent-2);"></div>
+                        </div>
+                    </div>
+                    <div class="metric" style="margin-top: 16px;">
+                        <div class="metric-header">
+                            <span>Response Time</span>
+                            <span>128ms</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 85%; background: var(--accent);"></div>
+                        </div>
+                    </div>
+                    <div class="metric" style="margin-top: 16px;">
+                        <div class="metric-header">
+                            <span>Storage Usage</span>
+                            <span>65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%; background: var(--purple);"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -376,62 +579,193 @@
             const dark = root.getAttribute('data-theme') === 'dark';
             root.setAttribute('data-theme', dark ? 'light' : 'dark');
             localStorage.setItem(key, dark ? 'light' : 'dark');
+            updateCharts();
         });
         if(!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
             root.setAttribute('data-theme','dark');
         }
     })();
 
-    // Sample Chart Data (replace with real data from backend)
-    const ctx = document.getElementById('bookingsChart').getContext('2d');
-    const chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            datasets: [{
-                label: 'Bookings',
-                data: [12, 19, 15, 22, 30, 28],
-                borderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(),
-                backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() + '20',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.3,
-                pointBackgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--panel').trim(),
-                pointBorderColor: getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(),
-                pointBorderWidth: 2,
-                pointRadius: 5,
-                pointHoverRadius: 7
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    labels: {
-                        color: getComputedStyle(document.documentElement).getPropertyValue('--text').trim(),
-                        font: { size: 12 }
+    // Helper function to get CSS variable
+    function getCssVar(name) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    }
+
+    // Update all charts when theme changes
+    function updateCharts() {
+        setTimeout(() => {
+            initBookingsChart();
+            initDistributionChart();
+            initMiniCharts();
+        }, 100);
+    }
+
+    // Main Bookings Chart
+    function initBookingsChart() {
+        const ctx = document.getElementById('bookingsChart').getContext('2d');
+        if(window.bookingsChartInstance) window.bookingsChartInstance.destroy();
+
+        window.bookingsChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Bookings',
+                    data: [12, 19, 15, 22, 30, 28],
+                    borderColor: getCssVar('--accent'),
+                    backgroundColor: getCssVar('--accent') + '20',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: getCssVar('--panel'),
+                    pointBorderColor: getCssVar('--accent'),
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: getCssVar('--text'),
+                            font: { size: 12 }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'transparent' },
+                        ticks: { color: getCssVar('--muted') }
+                    },
+                    y: {
+                        grid: { color: getCssVar('--border') },
+                        ticks: { color: getCssVar('--muted') }
                     }
                 }
+            }
+        });
+    }
+
+    // Resource Distribution Chart
+    function initDistributionChart() {
+        const ctx = document.getElementById('distributionChart').getContext('2d');
+        if(window.distributionChartInstance) window.distributionChartInstance.destroy();
+
+        window.distributionChartInstance = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Guiders', 'Vehicles', 'Accommodations', 'Places', 'Packages'],
+                datasets: [{
+                    data: [{{ $guiderCount }}, {{ $vehicleCount }}, {{ $accommodationCount }}, {{ $placeCount }}, {{ $packageCount }}],
+                    backgroundColor: [
+                        getCssVar('--accent'),
+                        getCssVar('--purple'),
+                        getCssVar('--accent-2'),
+                        getCssVar('--warning'),
+                        getCssVar('--pink')
+                    ],
+                    borderWidth: 0,
+                    hoverOffset: 8
+                }]
             },
-            scales: {
-                x: {
-                    grid: { color: 'transparent' },
-                    ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() }
-                },
-                y: {
-                    grid: { color: getComputedStyle(document.documentElement).getPropertyValue('--border').trim() },
-                    ticks: { color: getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: getCssVar('--text'),
+                            padding: 15,
+                            usePointStyle: true
+                        }
+                    }
                 }
             }
-        }
-    });
+        });
+    }
 
-    // Notification Dismiss
-    document.querySelectorAll('.notification-dismiss').forEach(btn => {
-        btn.addEventListener('click', function() {
-            this.closest('.notification-item').style.opacity = '0';
-            setTimeout(() => this.closest('.notification-item').remove(), 300);
+    // Mini Charts for Stats
+    function initMiniCharts() {
+        // Guider mini chart
+        const guiderCtx = document.getElementById('guiderChart').getContext('2d');
+        new Chart(guiderCtx, {
+            type: 'line',
+            data: {
+                labels: ['', '', '', '', '', ''],
+                datasets: [{
+                    data: [5, 8, 12, 15, 18, {{ $guiderCount }}],
+                    borderColor: getCssVar('--accent'),
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        // Package mini chart
+        const packageCtx = document.getElementById('packageChart').getContext('2d');
+        new Chart(packageCtx, {
+            type: 'line',
+            data: {
+                labels: ['', '', '', '', '', ''],
+                datasets: [{
+                    data: [3, 7, 10, 14, 18, {{ $packageCount }}],
+                    borderColor: getCssVar('--pink'),
+                    borderWidth: 2,
+                    fill: false,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { display: false },
+                    y: { display: false }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    // Initialize all charts
+    document.addEventListener('DOMContentLoaded', function() {
+        initBookingsChart();
+        initDistributionChart();
+        initMiniCharts();
+
+        // Notification Dismiss
+        document.querySelectorAll('.notification-dismiss').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.closest('.notification-item').style.opacity = '0';
+                setTimeout(() => this.closest('.notification-item').remove(), 300);
+            });
+        });
+
+        // Add hover effects to stats
+        document.querySelectorAll('.stat').forEach(stat => {
+            stat.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-4px)';
+            });
+            stat.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
         });
     });
 </script>
