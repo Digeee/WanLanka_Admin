@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
 {
-    protected $fillable = [
-        'place_id', 'pickup_district', 'pickup_location', 'people_count',
-        'date', 'time', 'vehicle_id', 'total_price', 'guider', 'status'
-    ];
+   protected $fillable = [
+    'place_id', 'pickup_district', 'pickup_location', 'latitude', 'longitude',
+    'full_name', 'email', 'people_count', 'date', 'time', 'vehicle_id',
+    'total_price', 'guider', 'status'
+];
 
     public function vehicle()
     {
