@@ -47,14 +47,7 @@
                 <label for="pickup_location" class="form-label">Pickup Location</label>
                 <input type="text" class="form-control" id="pickup_location" name="pickup_location" value="{{ $booking->pickup_location }}" required>
             </div>
-            <div class="mb-3">
-                <label for="latitude" class="form-label">Latitude</label>
-                <input type="number" step="any" class="form-control" id="latitude" name="latitude" value="{{ $booking->latitude ?? '' }}" placeholder="e.g., 7.8731">
-            </div>
-            <div class="mb-3">
-                <label for="longitude" class="form-label">Longitude</label>
-                <input type="number" step="any" class="form-control" id="longitude" name="longitude" value="{{ $booking->longitude ?? '' }}" placeholder="e.g., 80.7718">
-            </div>
+
             <div class="mb-3">
                 <label for="full_name" class="form-label">Full Name</label>
                 <input type="text" class="form-control" id="full_name" name="full_name" value="{{ $booking->full_name ?? '' }}" required>

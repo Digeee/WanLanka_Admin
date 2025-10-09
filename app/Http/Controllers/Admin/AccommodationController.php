@@ -24,7 +24,7 @@ class AccommodationController extends Controller
 
     public function index()
     {
-        $accommodations = Accommodation::paginate(10);
+        $accommodations = Accommodation::paginate(100);
         return view('admin.accommodations.index', compact('accommodations'));
     }
 
