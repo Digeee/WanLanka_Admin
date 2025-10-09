@@ -1,6 +1,5 @@
 @extends('admin.layouts.master')
 
-
 @section('content')
     <div class="container">
         <h1>Edit Booking #{{ $booking->id }}</h1>
@@ -49,8 +48,24 @@
                 <input type="text" class="form-control" id="pickup_location" name="pickup_location" value="{{ $booking->pickup_location }}" required>
             </div>
             <div class="mb-3">
+                <label for="latitude" class="form-label">Latitude</label>
+                <input type="number" step="any" class="form-control" id="latitude" name="latitude" value="{{ $booking->latitude ?? '' }}" placeholder="e.g., 7.8731">
+            </div>
+            <div class="mb-3">
+                <label for="longitude" class="form-label">Longitude</label>
+                <input type="number" step="any" class="form-control" id="longitude" name="longitude" value="{{ $booking->longitude ?? '' }}" placeholder="e.g., 80.7718">
+            </div>
+            <div class="mb-3">
+                <label for="full_name" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="full_name" name="full_name" value="{{ $booking->full_name ?? '' }}" required>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ $booking->email ?? '' }}" required>
+            </div>
+            <div class="mb-3">
                 <label for="people_count" class="form-label">Number of People</label>
-                <input type="number" class="form-control" id="people_count" name="people_count" value="{{ $booking->people_count }}" min="1" required>
+                <input type="number" class="form-control" id="people_count" name="people_count" value="{{ $booking->people_count }}" min="1" max="12" required>
             </div>
             <div class="mb-3">
                 <label for="date" class="form-label">Date</label>
@@ -94,5 +109,3 @@
         </form>
     </div>
 @endsection
-
-

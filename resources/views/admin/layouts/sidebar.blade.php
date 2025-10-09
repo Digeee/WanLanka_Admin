@@ -273,6 +273,14 @@ body {
         width: auto;
         padding: 12px 14px;
     }
+    .collapse {
+    display: none;
+    transition: all 0.3s ease;
+}
+
+.collapse.show {
+    display: block;
+}
 }
     </style>
         <nav class="sidebar">
@@ -335,21 +343,20 @@ body {
                     <span class="nav-label">Accommodations</span>
                 </a>
             </li>
-             <li>
-                <a href="{{ route('admin.bookings.index') }}"
-                class="{{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
-                    <i class="fas fa-calendar-check"></i>
-                    <span class="nav-label">Bookings</span>
-                </a>
-            </li>
-             <li>
-                <a href="{{ route('admin.bookings.index') }}"
-                class="{{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
-                    <i class="fas fa-handshake"></i>
-                <span class="nav-label">Offers</span>
-                </a>
-            </li>
-            <li>
+<li>
+  <a href="#bookingsSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+    <i class="fas fa-calendar-check"></i>
+    <span class="nav-label">Bookings</span>
+  </a>
+  <ul class="collapse list-unstyled" id="bookingsSubmenu">
+    <li><a href="{{ route('admin.bookings.index') }}">Individual Place</a></li>
+    <li><a href="{{ route('admin.bookings.index') }}">Fixed Package Booking</a></li>
+    <li><a href="{{ route('admin.bookings.index') }}">Custom Package Booking</a></li>
+  </ul>
+</li>
+
+
+         <li>
         <a href="{{ route('admin.places.user-sent.index') }}"
    class="{{ request()->routeIs('admin.places.user-sent.*') ? 'active' : '' }}">
    <i class="fas fa-map-marker-alt"></i>
@@ -372,3 +379,5 @@ body {
             </button>
         </div>
     </nav>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
