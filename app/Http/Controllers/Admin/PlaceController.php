@@ -23,15 +23,38 @@ class PlaceController extends Controller
         'Southern' => ['Hambantota', 'Matara', 'Galle']
     ];
 
-    public function index()
+    public function index(Request $request)
     {
-        $places = Place::paginate(100);
-        return view('admin.places.index', compact('places'));
+        $places = Place::query();
+
+        // Optional filtering
+        if ($request->filled('search')) {
+            $places->where(function ($query) use ($request) {
+                $query->where('name', 'like', "%{$request->search}%")
+                      ->orWhere('location', 'like', "%{$request->search}%");
+            });
+        }
+
+        if ($request->filled('province')) {
+            $places->where('province', $request->province);
+        }
+
+        if ($request->filled('district')) {
+            $places->where('district', $request->district);
+        }
+
+        $places = $places->paginate(100);
+
+        $provinces = array_keys($this->provinceDistricts);
+        $districts = collect($this->provinceDistricts)->flatten()->toArray();
+
+        return view('admin.places.index', compact('places', 'provinces', 'districts'));
     }
 
     public function create()
     {
-        return view('admin.places.create');
+        $provinces = array_keys($this->provinceDistricts);
+        return view('admin.places.create', compact('provinces'));
     }
 
     public function store(Request $request)
@@ -64,12 +87,10 @@ class PlaceController extends Controller
 
         $data['slug'] = Str::slug($data['name']);
 
-        // Handle image upload
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('places', 'public');
         }
 
-        // Handle gallery upload (multiple images)
         if ($request->hasFile('gallery')) {
             $galleryPaths = [];
             foreach ($request->file('gallery') as $file) {
@@ -89,7 +110,9 @@ class PlaceController extends Controller
 
     public function edit(Place $place)
     {
-        return view('admin.places.edit', compact('place'));
+        $provinces = array_keys($this->provinceDistricts);
+        $districts = $this->provinceDistricts[$place->province] ?? [];
+        return view('admin.places.edit', compact('place', 'provinces', 'districts'));
     }
 
     public function update(Request $request, Place $place)
@@ -122,7 +145,6 @@ class PlaceController extends Controller
 
         $data['slug'] = Str::slug($data['name']);
 
-        // Handle image upload
         if ($request->hasFile('image')) {
             if ($place->image && Storage::disk('public')->exists($place->image)) {
                 Storage::disk('public')->delete($place->image);
@@ -130,12 +152,11 @@ class PlaceController extends Controller
             $data['image'] = $request->file('image')->store('places', 'public');
         }
 
-        // Handle gallery upload (multiple images)
         if ($request->hasFile('gallery')) {
-            $galleryPaths = $place->gallery ?? [];
             foreach ($place->gallery ?? [] as $existingImage) {
                 Storage::disk('public')->delete($existingImage);
             }
+            $galleryPaths = [];
             foreach ($request->file('gallery') as $file) {
                 $galleryPaths[] = $file->store('places/gallery', 'public');
             }
@@ -151,6 +172,7 @@ class PlaceController extends Controller
         if ($place->image && Storage::disk('public')->exists($place->image)) {
             Storage::disk('public')->delete($place->image);
         }
+
         if ($place->gallery) {
             foreach ($place->gallery as $galleryImage) {
                 if (Storage::disk('public')->exists($galleryImage)) {
@@ -158,6 +180,7 @@ class PlaceController extends Controller
                 }
             }
         }
+
         $place->delete();
         return redirect()->route('admin.places.index')->with('success', 'Place deleted successfully.');
     }

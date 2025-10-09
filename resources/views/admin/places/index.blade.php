@@ -2,196 +2,195 @@
 
 @section('content')
 <style>
-    /* ====== Design Tokens (Light / Dark) ====== */
-    :root{
-        --bg:#f8fafc; --panel:#ffffff; --muted:#64748b; --text:#0f172a;
-        --border:#e2e8f0; --ring:#cbd5e1; --accent:#3b82f6; --accent-2:#22c55e;
-        --danger:#ef4444; --warning:#f59e0b; --radius:16px;
-        --shadow-1:0 10px 20px rgba(2,6,23,.06);
-        --shadow-2:0 18px 40px rgba(2,6,23,.08);
-        --glass:blur(10px) saturate(1.05);
-    }
-    [data-theme="dark"]{
-        --bg:#0b1220; --panel:#0f172a; --muted:#94a3b8; --text:#e5e7eb;
-        --border:#1f2937; --ring:#334155; --accent:#60a5fa; --accent-2:#34d399;
-        --danger:#f87171; --warning:#fbbf24;
-        --shadow-1:0 10px 22px rgba(0,0,0,.35);
-        --shadow-2:0 22px 50px rgba(0,0,0,.45);
-        --glass:blur(10px) saturate(1.05);
-    }
+/* ====== Base Theme Variables ====== */
+:root {
+  --panel:#fff;
+  --text:#222;
+  --muted:#6c757d;
+  --border:#e0e6ef;
+  --accent:#1a73e8;
+  --danger:#d63031;
+  --success:#00b894;
+  --shadow-1:0 2px 8px rgba(0,0,0,0.05);
+}
+[data-theme="dark"] {
+  --panel:#1f1f28;
+  --text:#f5f5f5;
+  --muted:#999;
+  --border:#333;
+  --accent:#4a90e2;
+  --danger:#e17055;
+  --success:#55efc4;
+}
 
-    /* ====== Shell & Header ====== */
-    .shell{max-width:1200px;margin:28px auto 80px;padding:0 20px;color:var(--text);}
-    .page-header{
-        display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;
-        background:linear-gradient(180deg,color-mix(in oklab,var(--panel),transparent 4%),transparent);
-        border:1px solid var(--border);border-radius:18px;padding:14px 18px;box-shadow:var(--shadow-1);
-        overflow:hidden;
-    }
-    [data-theme="dark"] .page-header{
-        background:
-          radial-gradient(1200px 150px at 10% -40%, rgba(59,130,246,.12), transparent 70%),
-          linear-gradient(180deg,#0f172a 0%, #0b1220 100%);
-        border:1px solid var(--ring);
-        box-shadow:0 18px 50px rgba(2,6,23,.55), inset 0 1px 0 rgba(255,255,255,.04);
-    }
-    .breadcrumbs{font-size:12px;color:var(--muted);}
-    .breadcrumbs a{color:inherit;text-decoration:none;}
-    .title{margin:0;font-size:28px;font-weight:800;letter-spacing:.2px;color:var(--text);}
-    [data-theme="dark"] .title{color:#f8fafc;text-shadow:0 1px 0 rgba(0,0,0,.45);}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;}
+/* ====== Page Wrapper ====== */
+.shell{padding:24px;}
 
-    /* ====== Panel / Table ====== */
-    .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-1);overflow:hidden;}
-    .panel-header{
-        padding:14px 16px;border-bottom:1px solid var(--border);font-weight:800;
-        background:
-          linear-gradient(180deg,color-mix(in oklab,var(--panel),transparent 92%),transparent),
-          radial-gradient(1000px 100px at 0 -30%,color-mix(in oklab,var(--accent),transparent 92%),transparent);
-    }
-    .panel-body{padding:18px;}
+/* ====== Page Header ====== */
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+.page-header .title{font-size:22px;font-weight:700;color:var(--text);}
+.page-header .breadcrumbs{font-size:13px;color:var(--muted);margin-bottom:6px;}
+.page-header .breadcrumbs a{color:var(--accent);text-decoration:none;}
+.page-header .actions{display:flex;gap:10px;}
 
-    .table-wrap{overflow:auto;border:1px solid var(--border);border-radius:14px;}
-    table.data{width:100%;border-collapse:separate;border-spacing:0;min-width:900px;background:color-mix(in oklab,var(--panel),transparent 2%);}
-    .data thead th{
-        position:sticky;top:0;z-index:1;text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.5px;
-        color:var(--muted);background:color-mix(in oklab,var(--panel),transparent 2%);
-        border-bottom:1px solid var(--border);padding:12px 14px;
-    }
-    .data tbody td{padding:14px;border-bottom:1px solid var(--border);vertical-align:middle;}
-    .data tbody tr:hover{background:color-mix(in oklab,var(--panel),transparent 6%);}
+/* ====== Panel ====== */
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-1);margin-bottom:22px;}
+.panel-header{padding:14px 20px;font-weight:700;border-bottom:1px solid var(--border);color:var(--text);}
+.panel-body{padding:20px;}
 
-    /* Name cell */
-    .identity{display:flex;align-items:center;gap:10px;}
-    .avatar{
-        width:36px;height:36px;border-radius:10px;overflow:hidden;border:1px solid var(--border);
-        background:linear-gradient(135deg,color-mix(in oklab,var(--accent),transparent 70%),color-mix(in oklab,var(--panel),transparent 30%));
-        display:grid;place-items:center;color:#fff;font-weight:800;font-size:12px;flex:0 0 auto;
-    }
-    :root .avatar{
-      background:linear-gradient(135deg,color-mix(in oklab,var(--accent),white 70%),#eef2ff);
-      border-color:#dbeafe;
-    }
-    :root .avatar > span{color:#0f172a !important;text-shadow:0 1px 0 rgba(255,255,255,.55);}
-    [data-theme="dark"] .avatar{
-      background:linear-gradient(135deg,color-mix(in oklab,var(--accent),transparent 70%),color-mix(in oklab,var(--panel),transparent 30%));
-    }
-    [data-theme="dark"] .avatar > span{color:#fff !important;}
+/* ====== Buttons ====== */
+.btn{padding:8px 16px;border-radius:8px;font-weight:600;cursor:pointer;font-size:14px;transition:.2s;text-decoration:none;display:inline-block;border:none;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:#0d63d6;color:#fff;}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);}
+.btn-ghost:hover{background:var(--border);color:var(--text);}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-danger:hover{background:#c2362e;color:#fff;}
+.btn-tool{background:var(--border);border:none;color:var(--text);}
 
-    /* Chips */
-    .chip{display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 12px;border-radius:999px;
-          border:1px solid var(--ring);font-size:12px;font-weight:800;color:var(--text);
-          background:color-mix(in oklab,var(--panel),transparent 8%);}
-    .chip-dot{width:8px;height:8px;border-radius:999px;}
-    .chip-active{color:var(--accent);border-color:color-mix(in oklab,var(--accent),#000 15%);}
-    .chip-inactive{color:var(--warning);border-color:var(--warning);}
-    .chip-active .chip-dot{background:var(--accent-2);}
-    .chip-inactive .chip-dot{background:var(--warning);}
+/* ====== Filter Form ====== */
+.panel-body form label{display:block;margin-bottom:6px;font-weight:600;color:var(--muted);font-size:12px;}
+.panel-body form input,
+.panel-body form select{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--panel);color:var(--text);box-shadow:var(--shadow-1);}
 
-    /* Rating */
-    .rating{font-weight:800;}
-    .rating .star{margin-right:6px;color:var(--warning);}
+/* ====== Table ====== */
+.table-wrap{overflow-x:auto;}
+table.data{width:100%;border-collapse:collapse;}
+table.data th, table.data td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);}
+table.data thead{background:var(--panel);}
+table.data th{font-size:13px;font-weight:700;color:var(--muted);}
+table.data tbody tr:hover{background:rgba(0,0,0,0.03);}
 
-    /* Alerts */
-    .alert{border-radius:12px;padding:12px 14px;font-weight:700;}
-    .alert-success{color:#065f46;background:#ecfdf5;border:1px solid #a7f3d0;}
-    [data-theme="dark"] .alert-success{color:#bbf7d0;background:rgba(6,95,70,.15);border:1px solid #134e4a;}
+/* Identity (avatar + name) */
+.identity{display:flex;align-items:center;gap:12px;}
+.avatar{width:42px;height:42px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:var(--panel);
+        display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--accent);box-shadow:var(--shadow-1);}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:12px;}
 
-    /* Pagination */
-    nav .pagination{display:flex;gap:8px;flex-wrap:wrap;padding:12px 0;}
-    .page-item{list-style:none;}
-    .page-link{
-        display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;
-        padding:0 12px;border-radius:10px;border:1px solid var(--border);text-decoration:none;
-        color:var(--text);background:var(--panel);box-shadow:var(--shadow-1);font-weight:700;
-        transition:box-shadow .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
-    }
-    .page-item.active .page-link{background:color-mix(in oklab,var(--accent),#000 8%);color:#fff;border-color:color-mix(in oklab,var(--accent),#000 18%);}
-    .page-link:hover{box-shadow:var(--shadow-2);}
+/* Rating */
+.rating{font-weight:700;color:var(--accent);}
+.star{color:var(--accent);}
 
-    /* ====== Glossy pill buttons (your stable no-shake style) ====== */
-    .btn{
-        --fg:var(--text); --bd:var(--ring); --fill:color-mix(in oklab,var(--panel),transparent 10%);
-        --shine:linear-gradient(115deg,transparent 0%,rgba(255,255,255,.16) 45%,rgba(255,255,255,.28) 55%,transparent 70%);
-        position:relative;isolation:isolate;appearance:none;cursor:pointer;
-        font-weight:800;letter-spacing:.3px;font-size:14px;border-radius:999px;padding:10px 16px;
-        text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+/* Chips (status tags) */
+.chip{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;}
+.chip .chip-dot{width:8px;height:8px;border-radius:50%;margin-right:6px;}
+.chip-active{background:rgba(0,184,148,0.1);color:var(--success);}
+.chip-active .chip-dot{background:var(--success);}
+.chip-inactive{background:rgba(214,48,49,0.1);color:var(--danger);}
+.chip-inactive .chip-dot{background:var(--danger);}
 
-        background-image:
-          var(--shine),
-          linear-gradient(var(--fill),var(--fill)),
-          linear-gradient(135deg,var(--bd),color-mix(in oklab,var(--bd),#000 12%));
-        background-origin:padding-box,padding-box,border-box;
-        background-clip:padding-box,padding-box,border-box;
-        background-size:220% 100%,100% 100%,100% 100%;
-        background-position:-120% 0,0 0,0 0;
+/* ====== Enhanced Pagination ====== */
+.pagination-wrapper{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+    margin-top:24px;
+}
 
-        border:1.5px solid transparent;color:var(--fg);
-        box-shadow:var(--shadow-1);
-        transition:background-position .6s ease,box-shadow .25s ease,color .25s ease,border-color .25s ease;
-        overflow:hidden;backface-visibility:hidden;transform:translateZ(0);
-    }
-    .btn:hover{background-position:120% 0,0 0,0 0;box-shadow:var(--shadow-2);}
-    .btn:active{transform:translateY(1px);}
-    .btn:focus-visible{outline:none;box-shadow:0 0 0 3px color-mix(in oklab,var(--accent),transparent 60%),var(--shadow-2);}
+.pagination-info{
+    color:var(--muted);
+    font-size:14px;
+    font-weight:600;
+}
 
-    [data-theme="dark"] .btn{
-        --shine:linear-gradient(115deg,transparent 0%,rgba(255,255,255,.08) 45%,rgba(255,255,255,.14) 55%,transparent 70%);
-        --fill:color-mix(in oklab,var(--panel),transparent 14%);
-        color:color-mix(in oklab,var(--text),white 14%);
-    }
-    .btn-primary{
-        --fg:color-mix(in oklab,var(--accent),#000 35%);
-        --bd:color-mix(in oklab,var(--accent),#000 15%);
-        --fill:color-mix(in oklab,var(--panel),transparent 0%);
-    }
-    .btn-primary:hover{
-        color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.25);
-        background-image:
-          var(--shine),
-          linear-gradient(180deg,color-mix(in oklab,var(--accent),#000 10%),var(--accent)),
-          linear-gradient(135deg,color-mix(in oklab,var(--accent),#000 15%),color-mix(in oklab,var(--accent),#000 26%));
-        border-color:transparent;
-    }
-    .btn-ghost{
-        --fg:color-mix(in oklab,var(--accent),#000 15%);
-        --bd:color-mix(in oklab,var(--accent),#000 20%);
-        --fill:color-mix(in oklab,var(--panel),transparent 8%);
-        border:1.5px dashed transparent;
-    }
-    .btn-ghost:hover{
-        border-style:solid;
-        color:color-mix(in oklab,var(--accent),#000 10%);
-        background-image:
-          var(--shine),
-          linear-gradient(color-mix(in oklab,var(--accent),transparent 92%),color-mix(in oklab,var(--accent),transparent 92%)),
-          linear-gradient(135deg,color-mix(in oklab,var(--accent),#000 20%),color-mix(in oklab,var(--accent),#000 32%));
-    }
-    .btn-danger{
-        --fg:color-mix(in oklab,var(--danger),#000 25%);
-        --bd:color-mix(in oklab,var(--danger),#000 18%);
-        --fill:color-mix(in oklab,var(--panel),transparent 0%);
-    }
-    .btn-danger:hover{
-        color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.25);
-        background-image:
-          var(--shine),
-          linear-gradient(180deg,color-mix(in oklab,var(--danger),#000 8%),var(--danger)),
-          linear-gradient(135deg,color-mix(in oklab,var(--danger),#000 18%),color-mix(in oklab,var(--danger),#000 28%));
-        box-shadow:0 14px 30px rgba(239,68,68,.35);
-        border-color:transparent;
-    }
+.pagination{
+    display:flex;
+    gap:4px;
+    list-style:none;
+    padding:0;
+    margin:0;
+    align-items:center;
+}
+
+.pagination li{
+    margin:0;
+}
+
+.pagination li a,
+.pagination li span{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px 12px;
+    min-width:40px;
+    height:40px;
+    border-radius:8px;
+    border:1px solid var(--border);
+    color:var(--text);
+    text-decoration:none;
+    font-size:14px;
+    font-weight:600;
+    transition:all 0.2s ease;
+    background:var(--panel);
+}
+
+.pagination li.active span{
+    background:var(--accent);
+    color:#fff;
+    border-color:var(--accent);
+    box-shadow:0 2px 4px rgba(26, 115, 232, 0.3);
+}
+
+.pagination li a:hover{
+    background:var(--accent);
+    color:#fff;
+    border-color:var(--accent);
+    transform:translateY(-1px);
+    box-shadow:0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.pagination li.disabled span{
+    color:var(--muted);
+    cursor:not-allowed;
+    opacity:0.5;
+}
+
+.pagination li.disabled span:hover{
+    background:var(--panel);
+    transform:none;
+    box-shadow:none;
+}
+
+/* Page navigation arrows */
+.pagination li:first-child a,
+.pagination li:first-child span{
+    padding-left:16px;
+    padding-right:16px;
+}
+
+.pagination li:last-child a,
+.pagination li:last-child span{
+    padding-left:16px;
+    padding-right:16px;
+}
+
+/* Alert styles */
+.alert{
+    padding:12px 20px;
+    border-radius:8px;
+    margin-bottom:20px;
+    font-weight:600;
+}
+
+.alert-success{
+    background:rgba(0,184,148,0.1);
+    color:var(--success);
+    border:1px solid rgba(0,184,148,0.2);
+}
 </style>
 
 <div class="shell">
     <div class="page-header">
         <div>
-            <div class="breadcrumbs"><a href="{{ route('admin.places.index') }}">Places</a> / <span>Manage</span></div>
-            <h1 class="title">Manage Places</h1>
+            <div class="breadcrumbs">
+                <a href="{{ route('admin.places.index') }}">Places</a> / <span>Manage</span>
+            </div>
+            <h1 class="title">Places Management</h1>
         </div>
         <div class="actions">
-            <button type="button" id="themeToggle" class="btn btn-primary">Theme</button>
-            <a href="{{ route('admin.places.create') }}" class="btn btn-primary">Add New Place</a>
+            <button type="button" id="themeToggle" class="btn btn-tool">🌙 Theme</button>
+            <a href="{{ route('admin.places.create') }}" class="btn btn-primary">+ Add New Place</a>
         </div>
     </div>
 
@@ -199,97 +198,208 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
+    <!-- Filter Panel -->
     <div class="panel">
-        <div class="panel-header">All Places</div>
+        <div class="panel-header">🔍 Filter Places</div>
+        <div class="panel-body">
+            <form method="GET" action="{{ route('admin.places.index') }}" id="filterForm">
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:16px;">
+                    <!-- Search -->
+                    <div>
+                        <label>Search</label>
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Search by name or location...">
+                    </div>
+                    <!-- Province -->
+                    <div>
+                        <label>Province</label>
+                        <select name="province" id="provinceSelect">
+                            <option value="">All Provinces</option>
+                            @foreach($provinces as $province)
+                                <option value="{{ $province }}" {{ request('province') == $province ? 'selected' : '' }}>
+                                    {{ $province }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- District -->
+                    <div>
+                        <label>District</label>
+                        <select name="district" id="districtSelect">
+                            <option value="">All Districts</option>
+                            @foreach($districts as $district)
+                                <option value="{{ $district }}" {{ request('district') == $district ? 'selected' : '' }}>
+                                    {{ $district }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <!-- Status -->
+                    <div>
+                        <label>Status</label>
+                        <select name="status">
+                            <option value="">All Status</option>
+                            <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
+                            <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    <a href="{{ route('admin.places.index') }}" class="btn btn-ghost">Clear All</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Places Table -->
+    <div class="panel">
+        <div class="panel-header">
+            📍 All Places
+            <span style="color:var(--muted);font-weight:normal;">
+                ({{ $places->total() }} total{{ $places->hasPages() ? ', showing 12 per page' : '' }})
+            </span>
+        </div>
         <div class="panel-body">
             <div class="table-wrap">
                 <table class="data">
                     <thead>
                         <tr>
-                            <th style="min-width:260px;">Name</th>
+                            <th>Place</th>
+                            <th>Location</th>
                             <th>Province</th>
                             <th>District</th>
-                            <th>Location</th>
                             <th>Rating</th>
                             <th>Status</th>
                             <th style="min-width:240px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($places as $place)
-                            @php
-                                $n = trim($place->name ?? '');
-                                $bits = preg_split('/\s+/', $n);
-                                $initials = strtoupper((substr($bits[0] ?? '',0,1)) . (substr($bits[1] ?? '',0,1)));
-                                $active = strtolower((string)$place->status) === 'active';
-                            @endphp
+                        @forelse($places as $place)
                             <tr>
                                 <td>
                                     <div class="identity">
-                                        <div class="avatar"><span>{{ $initials ?: 'PL' }}</span></div>
-                                        <div style="font-weight:800;">{{ $place->name }}</div>
+                                        <div class="avatar">
+                                            @if($place->image)
+                                                <img src="{{ asset('storage/' . $place->image) }}" alt="{{ $place->name }}">
+                                            @else
+                                                {{ strtoupper(substr($place->name,0,2)) }}
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <div style="font-weight:800;">{{ $place->name }}</div>
+                                            <div style="font-size:12px;color:var(--muted);">{{ Str::limit($place->description, 40) }}</div>
+                                        </div>
                                     </div>
                                 </td>
-                                <td>{{ $place->province ?? 'N/A' }}</td>
-                                <td>{{ $place->district ?? 'N/A' }}</td>
-                                <td>{{ $place->location ?? 'N/A' }}</td>
+                                <td>{{ $place->location ?: 'N/A' }}</td>
+                                <td>{{ $place->province }}</td>
+                                <td>{{ $place->district }}</td>
                                 <td>
-                                    @if($place->rating !== null && $place->rating !== '')
-                                        <span class="rating"><span class="star">★</span>{{ number_format($place->rating,1) }}</span>
+                                    @if($place->rating)
+                                        <div class="rating">★ {{ number_format($place->rating,1) }}</div>
                                     @else
-                                        —
+                                        <span style="color:var(--muted);">No rating</span>
                                     @endif
                                 </td>
                                 <td>
-                                    @if($active)
+                                    @if($place->status == 'active')
                                         <span class="chip chip-active"><span class="chip-dot"></span>Active</span>
                                     @else
-                                        <span class="chip chip-inactive"><span class="chip-dot"></span>{{ ucfirst($place->status) }}</span>
+                                        <span class="chip chip-inactive"><span class="chip-dot"></span>Inactive</span>
                                     @endif
                                 </td>
                                 <td>
-                                    <div class="actions">
-                                        <a href="{{ route('admin.places.show', $place) }}" class="btn btn-ghost">View</a>
-                                        <a href="{{ route('admin.places.edit', $place) }}" class="btn btn-primary">Edit</a>
-                                        <form action="{{ route('admin.places.destroy', $place) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger"
-                                                onclick="return confirm('Are you sure you want to delete this place?')">Delete</button>
+                                    <div class="actions" style="display:flex;gap:8px;flex-wrap:wrap;">
+                                        <a href="{{ route('admin.places.show',$place) }}" class="btn btn-ghost">👁️ View</a>
+                                        <a href="{{ route('admin.places.edit',$place) }}" class="btn btn-primary">✏️ Edit</a>
+                                        <form action="{{ route('admin.places.destroy',$place) }}" method="POST" style="display:inline;">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this place?')">🗑️ Delete</button>
                                         </form>
                                     </div>
                                 </td>
                             </tr>
                         @empty
-                            <tr><td colspan="7">No places found.</td></tr>
+                            <tr>
+                                <td colspan="7" style="text-align:center;padding:40px;color:var(--muted);font-weight:600;">
+                                    <div style="font-size:48px;margin-bottom:16px;">🔍</div>
+                                    No places found matching your criteria.
+                                    <div style="margin-top:12px;">
+                                        <a href="{{ route('admin.places.index') }}" class="btn btn-ghost">Clear Filters</a>
+                                    </div>
+                                </td>
+                            </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
 
-            <div style="margin-top:12px;">
-                {{ $places->links() }}
-            </div>
+            @if($places->hasPages())
+                <div class="pagination-wrapper">
+                    <div class="pagination-info">
+                        Showing {{ $places->firstItem() }} to {{ $places->lastItem() }} of {{ $places->total() }} places
+                    </div>
+                    <div>
+                        {{ $places->appends(request()->query())->links() }}
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>
 
 <script>
-    // Theme toggle (persist)
+    // Province auto-submit for dynamic district loading
+    document.getElementById('provinceSelect')?.addEventListener('change', function() {
+        // Auto-submit form when province changes to update districts
+        document.getElementById('filterForm').submit();
+    });
+
+    // Theme toggle functionality
     (function(){
-        const key='ui-theme';
-        const root=document.documentElement;
-        const btn=document.getElementById('themeToggle');
-        const saved=localStorage.getItem(key);
-        if(saved==='dark'){ root.setAttribute('data-theme','dark'); }
-        btn?.addEventListener('click', ()=>{
-            const dark=root.getAttribute('data-theme')==='dark';
-            root.setAttribute('data-theme', dark ? 'light' : 'dark');
-            localStorage.setItem(key, dark ? 'light' : 'dark');
-        });
-        if(!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches){
+        const key = 'ui-theme';
+        const root = document.documentElement;
+        const btn = document.getElementById('themeToggle');
+        const saved = localStorage.getItem(key);
+
+        // Apply saved theme
+        if(saved === 'dark'){
             root.setAttribute('data-theme','dark');
+            btn.textContent = '☀️ Theme';
+        }
+
+        // Theme toggle event
+        btn?.addEventListener('click', function(){
+            const isDark = root.getAttribute('data-theme') === 'dark';
+            root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            localStorage.setItem(key, isDark ? 'light' : 'dark');
+            btn.textContent = isDark ? '🌙 Theme' : '☀️ Theme';
+        });
+
+        // Auto-detect system theme preference
+        if(!saved && window.matchMedia('(prefers-color-scheme: dark)').matches){
+            root.setAttribute('data-theme','dark');
+            btn.textContent = '☀️ Theme';
         }
     })();
+
+    // Smooth scroll to top after pagination click
+    document.addEventListener('DOMContentLoaded', function() {
+        const paginationLinks = document.querySelectorAll('.pagination a');
+        paginationLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                setTimeout(() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 100);
+            });
+        });
+    });
+
+    // Auto-submit search form on Enter key
+    document.querySelector('input[name="search"]')?.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            document.getElementById('filterForm').submit();
+        }
+    });
 </script>
 @endsection

@@ -30,13 +30,13 @@ class VehicleController extends Controller
     private function getDefaultPrice($vehicleType)
     {
         $prices = [
-            'bike' => 20.00,
-            'three_wheeler' => 25.00,
-            'car' => 30.00,
-            'van' => 50.00,
-            'bus' => 100.00,
+            'bike' => 2000.00,
+            'three_wheeler' => 2500.00,
+            'car' => 3000.00,
+            'van' => 5000.00,
+            'bus' => 10000.00,
         ];
 
-        return $prices[$vehicleType] ?? 30.00; // Default to $30 if type not found
+        return $prices[$vehicleType] ?? 3000.00;
     }
 }
