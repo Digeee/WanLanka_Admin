@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
 use App\Mail\OtpVerificationMail;
 
@@ -25,8 +26,8 @@ class AuthController extends Controller
 
         $admin = Admin::where('email', $request->email)->first();
 
-        if ($admin && $admin->password === $request->password) {
-            Auth::login($admin);
+        if ($admin && Hash::check($request->password, $admin->password)) {
+            Auth::guard('admin')->login($admin);
             return redirect()->route('admin.dashboard');
         }
 
@@ -110,7 +111,7 @@ class AuthController extends Controller
             return back()->withErrors(['email' => 'User not found']);
         }
 
-        $admin->password = $request->password; // Plaintext for now
+        $admin->password = Hash::make($request->password);
         $admin->save();
 
         // Clear session values

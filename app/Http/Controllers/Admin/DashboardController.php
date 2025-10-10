@@ -9,7 +9,7 @@ use App\Models\Accommodation;
 use App\Models\Place;
 use App\Models\Package;
 use App\Models\User;
-use App\Models\Booking; // Make sure this model exists (adjust if your booking model has a different name)
+use App\Models\Booking;
 use Illuminate\Support\Carbon;
 
 class DashboardController extends Controller
@@ -23,13 +23,24 @@ class DashboardController extends Controller
         $placeCount = Place::count();
         $packageCount = Package::count();
         $userCount = User::count();
+        $bookingCount = Booking::count();
 
         // ===== Recent Activities =====
         // We'll combine recent events from multiple models
         $recentActivities = collect();
 
+        // Example: New bookings (last 7 days)
+        Booking::latest()->take(3)->get()->each(function ($booking) use ($recentActivities) {
+            $recentActivities->push([
+                'title' => 'New Booking Created',
+                'description' => 'Booking #' . $booking->id . ' for ' . ($booking->full_name ?? 'Unknown User'),
+                'time' => $booking->created_at,
+                'type' => 'booking'
+            ]);
+        });
+
         // Example: New guiders (last 7 days)
-        Guider::latest()->take(3)->get()->each(function ($guider) use ($recentActivities) {
+        Guider::latest()->take(2)->get()->each(function ($guider) use ($recentActivities) {
             $recentActivities->push([
                 'title' => 'New Guider Added',
                 'description' => $guider->first_name . ' ' . $guider->last_name,
@@ -41,7 +52,7 @@ class DashboardController extends Controller
         // Example: New users (last 7 days)
         User::where('created_at', '>=', now()->subDays(7))
             ->latest()
-            ->take(3)
+            ->take(2)
             ->get()
             ->each(function ($user) use ($recentActivities) {
                 $recentActivities->push([
@@ -53,7 +64,7 @@ class DashboardController extends Controller
             });
 
         // Example: New packages
-        Package::latest()->take(2)->get()->each(function ($package) use ($recentActivities) {
+        Package::latest()->take(1)->get()->each(function ($package) use ($recentActivities) {
             $recentActivities->push([
                 'title' => 'New Package Created',
                 'description' => $package->title,
@@ -82,6 +93,12 @@ class DashboardController extends Controller
 
         $unreadNotificationsCount = count($notifications); // or filter by `read = false` if you track it
 
+        // ===== Booking Statistics =====
+        $todayBookings = Booking::whereDate('created_at', today())->count();
+        $pendingBookings = Booking::where('status', 'pending')->count();
+        $confirmedBookings = Booking::where('status', 'confirmed')->count();
+        $cancelledBookings = Booking::where('status', 'cancelled')->count();
+
         return view('admin.dashboard', compact(
             'guiderCount',
             'vehicleCount',
@@ -89,9 +106,14 @@ class DashboardController extends Controller
             'placeCount',
             'packageCount',
             'userCount',
+            'bookingCount',
             'recentActivities',
             'notifications',
-            'unreadNotificationsCount'
+            'unreadNotificationsCount',
+            'todayBookings',
+            'pendingBookings',
+            'confirmedBookings',
+            'cancelledBookings'
         ));
     }
 }
