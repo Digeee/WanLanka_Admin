@@ -121,6 +121,7 @@
     .t-purple{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--purple), transparent 86%), transparent 60%), var(--panel); }
     .t-amber{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--warning), transparent 86%), transparent 60%), var(--panel); }
     .t-pink{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--pink), transparent 86%), transparent 60%), var(--panel); }
+    .t-danger{ background: radial-gradient(220px 120px at 0% 0%, color-mix(in oklab, var(--danger), transparent 86%), transparent 60%), var(--panel); }
 
     [data-theme="dark"] .stat{
         border-color: var(--ring);
@@ -140,6 +141,9 @@
     }
     [data-theme="dark"] .t-pink{
         background: radial-gradient(260px 140px at -10% -30%, rgba(236,72,153,.18), transparent 60%), linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
+    }
+    [data-theme="dark"] .t-danger{
+        background: radial-gradient(260px 140px at -10% -30%, rgba(239,68,68,.18), transparent 60%), linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
     }
 
     /* ====== Dashboard Grid ====== */
@@ -342,6 +346,33 @@
         height: 200px;
         position: relative;
     }
+
+    /* ====== Booking Status Cards ====== */
+    .booking-status-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+        margin: 20px 0;
+    }
+    .booking-status-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        text-align: center;
+        box-shadow: var(--shadow-1);
+    }
+    .booking-status-count {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 0 0 4px;
+    }
+    .booking-status-label {
+        font-size: 12px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 </style>
 
 <div class="shell" id="dashboard-root">
@@ -381,6 +412,10 @@
         <a href="{{ route('admin.users.index') }}" class="action-card fade-in" style="animation-delay: 0.6s">
             <div class="action-icon">👥</div>
             <div class="action-title">Manage Users</div>
+        </a>
+        <a href="{{ route('admin.bookings.index') }}" class="action-card fade-in" style="animation-delay: 0.7s">
+            <div class="action-icon">📅</div>
+            <div class="action-title">Manage Bookings</div>
         </a>
     </div>
 
@@ -434,6 +469,40 @@
                 <div class="progress-fill" style="width: 90%; background: var(--accent);"></div>
             </div>
         </div>
+        <div class="stat t-danger fade-in" style="animation-delay: 0.7s">
+            <h3>Total Bookings</h3>
+            <p>{{ $bookingCount }}</p>
+            <div class="stat-icon">📅</div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 70%; background: var(--danger);"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Status Overview -->
+    <div class="panel fade-in" style="animation-delay: 0.8s">
+        <div class="panel-header">
+            <h2 class="panel-title">Booking Status Overview</h2>
+            <a href="{{ route('admin.bookings.index') }}" style="font-size: 12px; color: var(--accent); text-decoration: none;">View All Bookings</a>
+        </div>
+        <div class="booking-status-cards">
+            <div class="booking-status-card">
+                <div class="booking-status-count">{{ $todayBookings }}</div>
+                <div class="booking-status-label">Today</div>
+            </div>
+            <div class="booking-status-card">
+                <div class="booking-status-count" style="color: var(--warning);">{{ $pendingBookings }}</div>
+                <div class="booking-status-label">Pending</div>
+            </div>
+            <div class="booking-status-card">
+                <div class="booking-status-count" style="color: var(--accent-2);">{{ $confirmedBookings }}</div>
+                <div class="booking-status-label">Confirmed</div>
+            </div>
+            <div class="booking-status-card">
+                <div class="booking-status-count" style="color: var(--danger);">{{ $cancelledBookings }}</div>
+                <div class="booking-status-label">Cancelled</div>
+            </div>
+        </div>
     </div>
 
     <div class="dashboard-grid">
@@ -442,7 +511,7 @@
             <!-- Charts Row -->
             <div class="stats-grid">
                 <!-- Bookings Chart -->
-                <div class="panel fade-in" style="animation-delay: 0.7s">
+                <div class="panel fade-in" style="animation-delay: 0.9s">
                     <div class="panel-header">
                         <h2 class="panel-title">Bookings Overview</h2>
                     </div>
@@ -452,7 +521,7 @@
                 </div>
 
                 <!-- Resource Distribution -->
-                <div class="panel fade-in" style="animation-delay: 0.8s">
+                <div class="panel fade-in" style="animation-delay: 1.0s">
                     <div class="panel-header">
                         <h2 class="panel-title">Resource Distribution</h2>
                     </div>
@@ -463,7 +532,7 @@
             </div>
 
             <!-- Recent Activity -->
-            <div class="panel fade-in" style="animation-delay: 0.9s; margin-top: 20px;">
+            <div class="panel fade-in" style="animation-delay: 1.1s; margin-top: 20px;">
                 <div class="panel-header">
                     <h2 class="panel-title">Recent Activity</h2>
                     <a href="#" style="font-size: 12px; color: var(--accent); text-decoration: none;">View All</a>
@@ -478,6 +547,8 @@
                                     👥
                                 @elseif($activity['type'] === 'package')
                                     📦
+                                @elseif($activity['type'] === 'booking')
+                                    📅
                                 @else
                                     🔔
                                 @endif
@@ -496,7 +567,7 @@
         <!-- Sidebar: Notifications + Performance -->
         <div>
             <!-- Notifications -->
-            <div class="panel fade-in" style="animation-delay: 1.0s">
+            <div class="panel fade-in" style="animation-delay: 1.2s">
                 <div class="panel-header">
                     <h2 class="panel-title">Notifications</h2>
                     @if($unreadNotificationsCount > 0)
@@ -506,11 +577,17 @@
                 <div class="notification-list">
                     @forelse($notifications as $note)
                         <div class="notification-item">
-                            <div class="notification-icon" style="background: color-mix(in oklab, {{ $note['type'] === 'booking' ? 'var(--accent-2)' : 'var(--purple)' }}, transparent 80%);">
+                            <div class="notification-icon" style="background: color-mix(in oklab, {{ $note['type'] === 'booking' ? 'var(--accent-2)' : ($note['type'] === 'user' ? 'var(--purple)' : 'var(--accent)') }}, transparent 80%);">
                                 @if($note['type'] === 'booking')
                                     📅
-                                @else
+                                @elseif($note['type'] === 'user')
                                     👤
+                                @elseif($note['type'] === 'guider')
+                                    👨‍💼
+                                @elseif($note['type'] === 'package')
+                                    📦
+                                @else
+                                    🔔
                                 @endif
                             </div>
                             <div class="notification-text">
@@ -527,7 +604,7 @@
             </div>
 
             <!-- Performance Metrics -->
-            <div class="panel fade-in" style="animation-delay: 1.1s; margin-top: 20px;">
+            <div class="panel fade-in" style="animation-delay: 1.3s; margin-top: 20px;">
                 <div class="panel-header">
                     <h2 class="panel-title">Performance</h2>
                 </div>
@@ -657,15 +734,16 @@
         window.distributionChartInstance = new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Guiders', 'Vehicles', 'Accommodations', 'Places', 'Packages'],
+                labels: ['Guiders', 'Vehicles', 'Accommodations', 'Places', 'Packages', 'Bookings'],
                 datasets: [{
-                    data: [{{ $guiderCount }}, {{ $vehicleCount }}, {{ $accommodationCount }}, {{ $placeCount }}, {{ $packageCount }}],
+                    data: [{{ $guiderCount }}, {{ $vehicleCount }}, {{ $accommodationCount }}, {{ $placeCount }}, {{ $packageCount }}, {{ $bookingCount }}],
                     backgroundColor: [
                         getCssVar('--accent'),
                         getCssVar('--purple'),
                         getCssVar('--accent-2'),
                         getCssVar('--warning'),
-                        getCssVar('--pink')
+                        getCssVar('--pink'),
+                        getCssVar('--danger')
                     ],
                     borderWidth: 0,
                     hoverOffset: 8
