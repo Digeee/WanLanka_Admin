@@ -146,6 +146,61 @@ body {
     letter-spacing: 0.3px;
 }
 
+/* Dropdown styles */
+.dropdown-toggle {
+    cursor: pointer;
+}
+
+.dropdown-toggle::after {
+    content: "▼";
+    font-size: 10px;
+    margin-left: auto;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-toggle.collapsed::after {
+    transform: rotate(-90deg);
+}
+
+.dropdown-menu {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0 0;
+    background: rgba(46, 139, 87, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    display: none;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-menu li {
+    margin: 0;
+}
+
+.dropdown-menu a {
+    padding: 12px 18px 12px 50px;
+    font-size: 14px;
+    color: var(--text-dark);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+}
+
+.dropdown-menu a:hover, .dropdown-menu a.active {
+    background: rgba(46, 139, 87, 0.15);
+    color: var(--primary-dark);
+    transform: translateX(2px);
+    box-shadow: none;
+}
+
+.dropdown-menu a::before {
+    display: none;
+}
+
 .logout-area {
     padding: 20px 24px;
     border-top: 1px solid rgba(46, 139, 87, 0.15);
@@ -184,7 +239,7 @@ body {
         width: 80px;
     }
 
-    .logo-text, .nav-label {
+    .logo-text, .nav-label, .dropdown-toggle::after {
         display: none;
     }
 
@@ -221,6 +276,15 @@ body {
 
     .logout-text {
         display: none;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        left: 80px;
+        top: 0;
+        width: 200px;
+        box-shadow: var(--shadow);
+        z-index: 1000;
     }
 }
 
@@ -273,111 +337,120 @@ body {
         width: auto;
         padding: 12px 14px;
     }
-    .collapse {
-    display: none;
-    transition: all 0.3s ease;
 }
+</style>
 
-.collapse.show {
-    display: block;
-}
-}
-    </style>
-        <nav class="sidebar">
-        <div class="logo-container">
-            <div class="logo">
-                <i class="fas fa-leaf"></i>
-            </div>
-            <div class="logo-text">WanLanka</div>
+<nav class="sidebar">
+    <div class="logo-container">
+        <div class="logo">
+            <i class="fas fa-leaf"></i>
         </div>
+        <div class="logo-text">WanLanka</div>
+    </div>
 
-        <ul class="nav-links">
-            <li>
-                        <a href="{{ route('admin.dashboard') }}"
-                           class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }} nav-link">
-                            <i class="fas fa-tachometer-alt"></i>
-                            <span class="nav-label">Dashboard</span>
-                        </a>
-                    </li>
-             <li>
-                        <a href="{{ route('admin.packages.index') }}"
-                           class="{{ request()->routeIs('admin.packages.*') ? 'active' : '' }} nav-link">
-                            <i class="fas fa-box-open"></i>
-                            <span class="nav-label">Manage Packages</span>
-                        </a>
-                    </li>
-            <li>
-                        <a href="{{ route('admin.places.index') }}"
-                           class="{{ request()->routeIs('admin.places.*') ? 'active' : '' }} nav-link">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span class="nav-label">Manage Places</span>
-                        </a>
-                    </li>
+    <ul class="nav-links">
+        <li>
+            <a href="{{ route('admin.dashboard') }}"
+               class="{{ request()->routeIs('admin.dashboard') ? 'active' : '' }} nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span class="nav-label">Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('admin.packages.index') }}"
+               class="{{ request()->routeIs('admin.packages.*') ? 'active' : '' }} nav-link">
+                <i class="fas fa-box-open"></i>
+                <span class="nav-label">Manage Packages</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('admin.places.index') }}"
+               class="{{ request()->routeIs('admin.places.*') ? 'active' : '' }} nav-link">
+                <i class="fas fa-map-marker-alt"></i>
+                <span class="nav-label">Manage Places</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('admin.users.index') }}"
+               class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                <i class="fas fa-users"></i>
+                <span class="nav-label">Manage Users</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('admin.guiders.index') }}"
+            class="{{ request()->routeIs('admin.guiders.*') ? 'active' : '' }}">
+                <i class="fas fa-user-check"></i>
+                <span class="nav-label">Manage Guiders</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('admin.vehicles.index') }}"
+            class="{{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}">
+                <i class="fas fa-car"></i>
+                <span class="nav-label">Manage Vehicles</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('admin.accommodations.index') }}"
+            class="{{ request()->routeIs('admin.accommodations.*') ? 'active' : '' }}">
+                <i class="fas fa-hotel"></i>
+                <span class="nav-label">Accommodations</span>
+            </a>
+        </li>
+        <li>
+            <a href="#bookingsSubmenu" class="dropdown-toggle {{ request()->routeIs('admin.bookings.*') ? '' : 'collapsed' }}" data-bs-toggle="collapse" aria-expanded="{{ request()->routeIs('admin.bookings.*') ? 'true' : 'false' }}">
+                <i class="fas fa-calendar-check"></i>
+                <span class="nav-label">Bookings</span>
+            </a>
+            <ul class="dropdown-menu collapse {{ request()->routeIs('admin.bookings.*') ? 'show' : '' }}" id="bookingsSubmenu">
+                <li><a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.index') ? 'active' : '' }}">Individual Place</a></li>
+                <li><a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.index') && request()->query('type') == 'package' ? 'active' : '' }}">Fixed Package Booking</a></li>
+                <li><a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.index') && request()->query('type') == 'custom' ? 'active' : '' }}">Custom Package Booking</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="{{ route('admin.places.user-sent.index') }}"
+               class="{{ request()->routeIs('admin.places.user-sent.*') ? 'active' : '' }}">
+                <i class="fas fa-map-marker-alt"></i>
+                <span class="nav-label">User Sent Places</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('admin.ui_management.UI_index') }}"
+                       class="{{ request()->routeIs('admin.ui_management.*') ? 'active' : '' }} nav-link">
+                <i class="fas fa-cog"></i>
+                <span class="nav-label">UI Settings</span>
+            </a>
+        </li>
+    </ul>
 
-            <li>
-        <a href="{{ route('admin.users.index') }}"
-           class="{{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
-            <i class="fas fa-users"></i>
-            <span class="nav-label">Manage Users</span>
-        </a>
-    </li>
+    <div class="logout-area">
+        <button class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i>
+            <span class="logout-text">Logout</span>
+        </button>
+    </div>
+</nav>
 
-          <li>
-                <a href="{{ route('admin.guiders.index') }}"
-                class="{{ request()->routeIs('admin.guiders.*') ? 'active' : '' }}">
-                    <i class="fas fa-user-check"></i>
-                    <span class="nav-label">Manage Guiders</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.vehicles.index') }}"
-                class="{{ request()->routeIs('admin.vehicles.*') ? 'active' : '' }}">
-                    <i class="fas fa-car"></i>
-                    <span class="nav-label">Manage Vehicles</span>
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('admin.accommodations.index') }}"
-                class="{{ request()->routeIs('admin.accommodations.*') ? 'active' : '' }}">
-                    <i class="fas fa-hotel"></i>
-                    <span class="nav-label">Accommodations</span>
-                </a>
-            </li>
-<li>
-  <a href="#bookingsSubmenu" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
-    <i class="fas fa-calendar-check"></i>
-    <span class="nav-label">Bookings</span>
-  </a>
-  <ul class="collapse list-unstyled" id="bookingsSubmenu">
-    <li><a href="{{ route('admin.bookings.index') }}">Individual Place</a></li>
-    <li><a href="{{ route('admin.bookings.index') }}">Fixed Package Booking</a></li>
-    <li><a href="{{ route('admin.bookings.index') }}">Custom Package Booking</a></li>
-  </ul>
-</li>
-
-
-         <li>
-        <a href="{{ route('admin.places.user-sent.index') }}"
-   class="{{ request()->routeIs('admin.places.user-sent.*') ? 'active' : '' }}">
-   <i class="fas fa-map-marker-alt"></i>
-   <span class="nav-label">User Sent Places</span>
-</a>
-    </li>
-            <li>
-                <a href="{{ route('admin.ui_management.UI_index') }}"
-                           class="{{ request()->routeIs('admin.ui_management.*') ? 'active' : '' }} nav-link">
-                    <i class="fas fa-cog"></i>
-                    <span class="nav-label">UI Settings</span>
-                </a>
-            </li>
-        </ul>
-
-        <div class="logout-area">
-            <button class="logout-btn">
-                <i class="fas fa-sign-out-alt"></i>
-                <span class="logout-text">Logout</span>
-            </button>
-        </div>
-    </nav>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Add click event to close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const bookingsMenu = document.getElementById('bookingsSubmenu');
+        const bookingsToggle = document.querySelector('[href="#bookingsSubmenu"]');
 
+        if (bookingsMenu && bookingsToggle &&
+            !bookingsMenu.contains(event.target) &&
+            !bookingsToggle.contains(event.target)) {
+            const bsCollapse = new bootstrap.Collapse(bookingsMenu, {
+                toggle: false
+            });
+
+            if (bookingsMenu.classList.contains('show')) {
+                bsCollapse.hide();
+                bookingsToggle.classList.add('collapsed');
+            }
+        }
+    });
+</script>

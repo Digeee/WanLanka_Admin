@@ -85,21 +85,21 @@
                     <option value="yes" {{ $booking->guider == 'yes' ? 'selected' : '' }}>Yes</option>
                 </select>
             </div>
-            <div id="guiderSection" style="display: {{ $booking->guider == 'yes' ? 'block' : 'none' }};">
-                <div class="mb-3">
-                    <label for="guider_id" class="form-label">Assign Guider</label>
-                        <select class="form-select" id="guider_id" name="guider_id">
-                        <option value="">Select Guider</option>
-                        @forelse($guiders as $guider)
-                            <option value="{{ $guider->id }}" {{ $booking->guider_id == $guider->id ? 'selected' : '' }}>
-                                {{ $guider->name }} ({{ $guider->email }}) - Specializations: {{ $guider->specializations ? implode(', ', $guider->specializations) : 'None' }} - Availability: {{ $guider->availability ? 'Yes' : 'No' }}
-                            </option>
-                        @empty
-                            <option disabled>No available guiders found. Create some in /admin/guiders.</option>
-                        @endforelse
-                    </select>
-                </div>
-            </div>
+          <div id="guiderSection" style="display: {{ $booking->guider == 'yes' ? 'block' : 'none' }};">
+    <div class="mb-3">
+        <label for="guider_id" class="form-label">Assign Guider</label>
+        <select class="form-select" id="guider_id" name="guider_id">
+            <option value="">Select Guider</option>
+            @forelse($guiders as $guider)
+                <option value="{{ $guider->id }}" {{ $booking->guider_id == $guider->id ? 'selected' : '' }}>
+                    {{ $guider->first_name . ' ' . $guider->last_name }} ({{ $guider->email }}) - Specializations: {{ $guider->specializations ? implode(', ', $guider->specializations) : 'None' }} - Availability: {{ $guider->availability ? 'Yes' : 'No' }}
+                </option>
+            @empty
+                <option disabled>No available guiders found. Create some in /admin/guiders.</option>
+            @endforelse
+        </select>
+    </div>
+</div>
             <div class="mb-3">
                 <label for="total_price" class="form-label">Total Price ($)</label>
                 <input type="number" step="0.01" class="form-control" id="total_price" name="total_price" value="{{ $booking->total_price }}" required>
