@@ -16,4 +16,14 @@ class Booking extends Model
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id', 'id');
     }
+
+    public function guider()
+    {
+        return $this->belongsTo(Guider::class);
+    }
+
+    public function place()
+    {
+        return $this->belongsTo(Place::class);
+    }
 }

@@ -10,12 +10,13 @@
             @csrf
             @method('PUT')
             <div class="mb-3">
-                <label for="place_name" class="form-label">Place</label>
-                <input type="text" class="form-control" id="place_name" value="{{ $place ? $place->name : 'Unknown' }}" disabled>
+                <label class="form-label">Place</label>
+                <input type="text" class="form-control" value="{{ $place ? $place->name : 'Unknown' }}" disabled>
             </div>
             <div class="mb-3">
                 <label for="pickup_district" class="form-label">Pickup District</label>
                 <select class="form-select" id="pickup_district" name="pickup_district" required>
+                    <option value="">Select District</option>
                     <option value="Colombo" {{ $booking->pickup_district == 'Colombo' ? 'selected' : '' }}>Colombo</option>
                     <option value="Gampaha" {{ $booking->pickup_district == 'Gampaha' ? 'selected' : '' }}>Gampaha</option>
                     <option value="Kalutara" {{ $booking->pickup_district == 'Kalutara' ? 'selected' : '' }}>Kalutara</option>
@@ -47,7 +48,6 @@
                 <label for="pickup_location" class="form-label">Pickup Location</label>
                 <input type="text" class="form-control" id="pickup_location" name="pickup_location" value="{{ $booking->pickup_location }}" required>
             </div>
-
             <div class="mb-3">
                 <label for="full_name" class="form-label">Full Name</label>
                 <input type="text" class="form-control" id="full_name" name="full_name" value="{{ $booking->full_name ?? '' }}" required>
@@ -79,11 +79,26 @@
                 </select>
             </div>
             <div class="mb-3">
-                <label for="guider" class="form-label">Guider</label>
-                <select class="form-select" id="guider" name="guider" required>
+                <label for="guider" class="form-label">Guider Required</label>
+                <select class="form-select" id="guider" name="guider" required onchange="toggleGuiderSection()">
                     <option value="no" {{ $booking->guider == 'no' ? 'selected' : '' }}>No</option>
                     <option value="yes" {{ $booking->guider == 'yes' ? 'selected' : '' }}>Yes</option>
                 </select>
+            </div>
+            <div id="guiderSection" style="display: {{ $booking->guider == 'yes' ? 'block' : 'none' }};">
+                <div class="mb-3">
+                    <label for="guider_id" class="form-label">Assign Guider</label>
+                        <select class="form-select" id="guider_id" name="guider_id">
+                        <option value="">Select Guider</option>
+                        @forelse($guiders as $guider)
+                            <option value="{{ $guider->id }}" {{ $booking->guider_id == $guider->id ? 'selected' : '' }}>
+                                {{ $guider->name }} ({{ $guider->email }}) - Specializations: {{ $guider->specializations ? implode(', ', $guider->specializations) : 'None' }} - Availability: {{ $guider->availability ? 'Yes' : 'No' }}
+                            </option>
+                        @empty
+                            <option disabled>No available guiders found. Create some in /admin/guiders.</option>
+                        @endforelse
+                    </select>
+                </div>
             </div>
             <div class="mb-3">
                 <label for="total_price" class="form-label">Total Price ($)</label>
@@ -100,5 +115,13 @@
             <button type="submit" class="btn btn-primary">Update Booking</button>
             <a href="{{ route('admin.bookings.index') }}" class="btn btn-secondary">Cancel</a>
         </form>
+
+        <script>
+            function toggleGuiderSection() {
+                const guiderSelect = document.getElementById('guider');
+                const section = document.getElementById('guiderSection');
+                section.style.display = guiderSelect.value === 'yes' ? 'block' : 'none';
+            }
+        </script>
     </div>
 @endsection

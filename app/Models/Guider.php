@@ -35,4 +35,8 @@ class Guider extends Model
         'vehicle_types' => 'array',
         'availability' => 'boolean',
     ];
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'guider_id');
+    }
 }
