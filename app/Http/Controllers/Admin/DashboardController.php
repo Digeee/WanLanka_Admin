@@ -32,7 +32,7 @@ class DashboardController extends Controller
         Guider::latest()->take(3)->get()->each(function ($guider) use ($recentActivities) {
             $recentActivities->push([
                 'title' => 'New Guider Added',
-                'description' => $guider->name,
+                'description' => $guider->first_name . ' ' . $guider->last_name,
                 'time' => $guider->created_at,
                 'type' => 'guider'
             ]);

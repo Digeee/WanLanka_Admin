@@ -9,7 +9,7 @@ class Booking extends Model
    protected $fillable = [
     'place_id', 'pickup_district', 'pickup_location', 'latitude', 'longitude',
     'full_name', 'email', 'people_count', 'date', 'time', 'vehicle_id',
-    'total_price', 'guider', 'status'
+    'total_price', 'guider', 'guider_id', 'status'
 ];
 
     public function vehicle()

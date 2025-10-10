@@ -13,9 +13,9 @@ class BookingAssignmentMail extends Mailable
     public $booking;
     public $guider;
     public $vehicle;
-    public $type; // 'user', 'guider', 'unassigned'
+    public $type;
 
-    public function __construct($booking, $guider = null, $vehicle = null, $type = 'user')
+    public function __construct($booking, $guider, $vehicle, $type)
     {
         $this->booking = $booking;
         $this->guider = $guider;
@@ -25,19 +25,7 @@ class BookingAssignmentMail extends Mailable
 
     public function build()
     {
-        $subject = match ($this->type) {
-            'guider' => 'New Booking Assigned to You',
-            'unassigned' => 'Booking Unassigned',
-            default => 'Your Booking Update',
-        };
-
-        return $this->subject($subject)
-                    ->view('emails.booking-assignment')
-                    ->with([
-                        'booking' => $this->booking,
-                        'guider' => $this->guider,
-                        'vehicle' => $this->vehicle,
-                        'type' => $this->type,
-                    ]);
+        return $this->subject('Booking Assignment Update')
+                    ->view('emails.booking-assignment');
     }
 }
