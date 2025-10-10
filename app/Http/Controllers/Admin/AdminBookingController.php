@@ -8,8 +8,14 @@ use App\Models\Place;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 
+
 class AdminBookingController extends Controller
 {
+    /**
+     * Display a listing of the bookings.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         $bookings = Booking::with('vehicle')->get()->map(function ($booking) {
@@ -27,27 +33,42 @@ class AdminBookingController extends Controller
                 'date' => $booking->date,
                 'time' => $booking->time,
                 'vehicle_type' => $booking->vehicle ? $booking->vehicle->vehicle_type : 'N/A',
-                'guider' => $booking->guider ?? 'No',
+                'guider' => $booking->guider ?? 'No', // Remains as a string column
                 'total_price' => number_format($booking->total_price, 2),
                 'status' => $booking->status,
                 'created_at' => $booking->created_at->format('Y-m-d H:i:s'),
             ];
         });
 
-        return view('admin.bookings.index', compact('bookings'));
+        return view('admin.bookings.Individualplace_bookings.index', compact('bookings'));
     }
 
+    /**
+     * Show the form for editing the specified booking.
+     *
+     * @param int $id
+     * @return \Illuminate\View\View
+     */
     public function edit($id)
     {
         $booking = Booking::with('vehicle')->findOrFail($id);
         $place = Place::where('id', $booking->place_id)->first();
         $vehicles = Vehicle::where('status', 'available')->get();
-        return view('admin.bookings.edit', compact('booking', 'place', 'vehicles'));
+
+        return view('admin.bookings.Individualplace_bookings.edit', compact('booking', 'place', 'vehicles'));
     }
 
+    /**
+     * Update the specified booking in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request, $id)
     {
         $booking = Booking::findOrFail($id);
+
         $validated = $request->validate([
             'pickup_district' => 'required|string|max:255',
             'pickup_location' => 'required|string|max:500',
@@ -69,6 +90,12 @@ class AdminBookingController extends Controller
         return redirect()->route('admin.bookings.index')->with('success', 'Booking updated successfully');
     }
 
+    /**
+     * Remove the specified booking from storage.
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function destroy($id)
     {
         $booking = Booking::findOrFail($id);
