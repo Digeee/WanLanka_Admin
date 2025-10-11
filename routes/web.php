@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UIManagementController;
 use App\Http\Controllers\Admin\AdminBookingController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\FixedPackageBookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +98,14 @@ Route::middleware(['auth:admin'])->group(function () {
             Route::get('/{id}/edit', [AdminBookingController::class, 'edit'])->name('edit');
             Route::put('/{id}', [AdminBookingController::class, 'update'])->name('update');
             Route::delete('/{id}', [AdminBookingController::class, 'destroy'])->name('destroy');
+        });
+
+        // Fixed Package Bookings
+        Route::prefix('fixedpackage/bookings')->name('fixedpackage.bookings.')->group(function () {
+            Route::get('/', [FixedPackageBookingController::class, 'index'])->name('index');
+            Route::get('/{id}/edit', [FixedPackageBookingController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [FixedPackageBookingController::class, 'update'])->name('update');
+            Route::delete('/{id}', [FixedPackageBookingController::class, 'destroy'])->name('destroy');
         });
     });
 });
