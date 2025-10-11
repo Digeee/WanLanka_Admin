@@ -294,12 +294,12 @@
             <div class="stat-label">Total Packages</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value">{{ $packages->where('status', 'active')->count() }}</div>
-            <div class="stat-label">Active Packages</div>
+            <div class="stat-value">{{ $packages->where('status', 'approved')->count() }}</div>
+            <div class="stat-label">Approved Packages</div>
         </div>
         <div class="stat-card">
-            <div class="stat-value">{{ $packages->where('status', 'inactive')->count() }}</div>
-            <div class="stat-label">Inactive Packages</div>
+            <div class="stat-value">{{ $packages->where('status', 'pending')->count() }}</div>
+            <div class="stat-label">Pending Packages</div>
         </div>
     </div>
 

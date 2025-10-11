@@ -356,64 +356,52 @@
                 <!-- Destinations Section -->
                 <div class="form-group">
                     <label for="destinations">Destinations</label>
-                    <div class="tag-input-container" id="destinations-container">
-                        @if(is_array($customPackage->destinations))
-                            @foreach($customPackage->destinations as $destination)
-                                @if(!is_null($destination) && !empty(trim($destination)))
-                                    <div class="tag-item">
-                                        <input type="text" name="destinations[]" class="tag-input" value="{{ $destination }}">
-                                        <button type="button" class="tag-remove">×</button>
-                                    </div>
-                                @endif
-                            @endforeach
-                        @endif
-                        <div class="tag-item">
-                            <input type="text" name="destinations[]" class="tag-input" placeholder="Add destination...">
-                            <button type="button" class="tag-add">+</button>
-                        </div>
-                    </div>
+                    <select name="destinations[]" id="destinations" class="form-control" multiple required>
+                        @php
+                            $placeOptions = [
+                                24 => 'Jaffna Fort', 25 => 'Nallur Kandaswamy Kovil', 26 => 'Kankesanthurai Beach', 31 => 'Pooneryn', 32 => 'Jaffna Library',
+                                34 => 'Weliyaya Estate', 35 => 'Loggal Oya', 36 => 'Ella', 37 => 'Haputale', 38 => 'Beddagana Wetland Park', 39 => 'Kukuleganga Forest Reserve',
+                                40 => 'Bellanwila Rajamaha Viharaya', 41 => 'Riverston Plateau', 42 => 'Sembuwatta Lake', 43 => 'Narangala Peak', 44 => 'Kalametiya Bird Sanctuary',
+                                45 => 'Mulkirigala Rock Temple', 46 => 'Hummanaya Blowhole', 47 => 'Peessa Ella Waterfall', 48 => 'Namunukula Mountain', 49 => 'Dunhinda Waterfall',
+                                50 => 'Batadomba Lena Cave', 51 => 'Bopath Ella Waterfall', 52 => 'Kinchigune Eco Village', 53 => 'Anawilundawa Sanctuary', 54 => 'Munneswaram Temple',
+                                55 => 'Wilpattu National Park South Gate', 56 => 'Ritigala Forest Monastery', 57 => 'Kaludiya Pokuna', 58 => 'Kala Wewa Tank', 59 => 'Delft Island (Neduntivu)',
+                                60 => 'Casuarina Beach', 61 => 'Nagadeepa Purana Viharaya', 62 => 'Gal Oya National Park', 63 => 'Pigeon Island East', 64 => 'Lahugala National Park'
+                            ];
+                        @endphp
+                        @foreach($placeOptions as $id => $name)
+                            <option value="{{ $name }}" {{ (is_array($customPackage->destinations) && in_array($name, $customPackage->destinations)) ? 'selected' : '' }}>{{ $name }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 
                 <!-- Vehicles Section -->
                 <div class="form-group">
                     <label for="vehicles">Vehicles</label>
-                    <div class="tag-input-container" id="vehicles-container">
-                        @if(is_array($customPackage->vehicles))
-                            @foreach($customPackage->vehicles as $vehicle)
-                                @if(!is_null($vehicle) && !empty(trim($vehicle)))
-                                    <div class="tag-item">
-                                        <input type="text" name="vehicles[]" class="tag-input" value="{{ $vehicle }}">
-                                        <button type="button" class="tag-remove">×</button>
-                                    </div>
-                                @endif
-                            @endforeach
-                        @endif
-                        <div class="tag-item">
-                            <input type="text" name="vehicles[]" class="tag-input" placeholder="Add vehicle...">
-                            <button type="button" class="tag-add">+</button>
-                        </div>
-                    </div>
+                    <select name="vehicles[]" id="vehicles" class="form-control" multiple required>
+                        @php
+                            $vehicleOptions = [1 => 'bike', 2 => 'three_wheeler', 3 => 'van', 4 => 'bike'];
+                        @endphp
+                        @foreach($vehicleOptions as $id => $type)
+                            <option value="{{ $type }}" {{ (is_array($customPackage->vehicles) && in_array($type, $customPackage->vehicles)) ? 'selected' : '' }}>{{ ucfirst($type) }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 
                 <!-- Accommodations Section -->
                 <div class="form-group">
                     <label for="accommodations">Accommodations</label>
-                    <div class="tag-input-container" id="accommodations-container">
-                        @if(is_array($customPackage->accommodations))
-                            @foreach($customPackage->accommodations as $accommodation)
-                                @if(!is_null($accommodation) && !empty(trim($accommodation)))
-                                    <div class="tag-item">
-                                        <input type="text" name="accommodations[]" class="tag-input" value="{{ $accommodation }}">
-                                        <button type="button" class="tag-remove">×</button>
-                                    </div>
-                                @endif
-                            @endforeach
-                        @endif
-                        <div class="tag-item">
-                            <input type="text" name="accommodations[]" class="tag-input" placeholder="Add accommodation...">
-                            <button type="button" class="tag-add">+</button>
-                        </div>
-                    </div>
+                    <select name="accommodations[]" id="accommodations" class="form-control" multiple required>
+                        @php
+                            $accommodationOptions = [
+                                1 => 'Ocean View Hotel', 2 => 'Mountain Retreat', 3 => 'City Center Inn', 4 => 'Seaside Resort', 5 => 'Forest Lodge',
+                                6 => 'Hotel Paradise', 10 => 'Hilltop Haven', 20 => 'Ocean Breeze Resort', 30 => 'Colombo Comforts', 40 => 'Jungle Retreat',
+                                50 => 'Cultural Rest', 60 => 'Mountain View Inn', 70 => 'Lakefront Lodge', 80 => 'Northern Pearl Hotel', 90 => 'Eastern Bay Resort'
+                            ];
+                        @endphp
+                        @foreach($accommodationOptions as $id => $name)
+                            <option value="{{ $name }}" {{ (is_array($customPackage->accommodations) && in_array($name, $customPackage->accommodations)) ? 'selected' : '' }}>{{ $name }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 
                 <div class="form-group">
