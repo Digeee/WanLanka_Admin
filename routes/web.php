@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\AccommodationController;
 use App\Http\Controllers\Admin\PlaceController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\PackageController;
+use App\Http\Controllers\Admin\CustomPackageController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\UIManagementController;
 use App\Http\Controllers\Admin\AdminBookingController;
@@ -84,6 +85,7 @@ Route::middleware(['auth:admin'])->group(function () {
         Route::resource('places', PlaceController::class);
         Route::resource('sliders', SliderController::class);
         Route::resource('packages', PackageController::class);
+        Route::resource('custom-packages', CustomPackageController::class);
         Route::resource('users', UserController::class);
 
         // UI Management

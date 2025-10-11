@@ -406,7 +406,7 @@ body {
             <ul class="dropdown-menu collapse {{ request()->routeIs('admin.bookings.*') ? 'show' : '' }}" id="bookingsSubmenu">
                 <li><a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.index') ? 'active' : '' }}">Individual Place</a></li>
                 <li><a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.index') && request()->query('type') == 'package' ? 'active' : '' }}">Fixed Package Booking</a></li>
-                <li><a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.index') && request()->query('type') == 'custom' ? 'active' : '' }}">Custom Package Booking</a></li>
+                <li><a href="{{ route('admin.custom-packages.index') }}" class="{{ request()->routeIs('admin.custom-packages.*') ? 'active' : '' }}">Custom Package Requests</a></li>
             </ul>
         </li>
         <li>
