@@ -403,9 +403,9 @@ body {
                 <i class="fas fa-calendar-check"></i>
                 <span class="nav-label">Bookings</span>
             </a>
-            <ul class="dropdown-menu collapse {{ request()->routeIs('admin.bookings.*') ? 'show' : '' }}" id="bookingsSubmenu">
+            <ul class="dropdown-menu collapse {{ request()->routeIs('admin.bookings.*') || request()->routeIs('admin.fixedpackage.bookings.*') ? 'show' : '' }}" id="bookingsSubmenu">
                 <li><a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.index') ? 'active' : '' }}">Individual Place</a></li>
-                <li><a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.index') && request()->query('type') == 'package' ? 'active' : '' }}">Fixed Package Booking</a></li>
+                <li><a href="{{ route('admin.fixedpackage.bookings.index') }}" class="{{ request()->routeIs('admin.fixedpackage.bookings.*') ? 'active' : '' }}">Fixed Package Booking</a></li>
                 <li><a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.index') && request()->query('type') == 'custom' ? 'active' : '' }}">Custom Package Booking</a></li>
             </ul>
         </li>
