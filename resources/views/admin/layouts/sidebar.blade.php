@@ -399,14 +399,14 @@ body {
             </a>
         </li>
         <li>
-            <a href="#bookingsSubmenu" class="dropdown-toggle {{ request()->routeIs('admin.bookings.*') ? '' : 'collapsed' }}" data-bs-toggle="collapse" aria-expanded="{{ request()->routeIs('admin.bookings.*') ? 'true' : 'false' }}">
+            <a href="#bookingsSubmenu" class="dropdown-toggle {{ request()->routeIs('admin.bookings.*') || request()->routeIs('admin.fixedpackage.bookings.*') || request()->routeIs('admin.custom-packages.*') ? '' : 'collapsed' }}" data-bs-toggle="collapse" aria-expanded="{{ request()->routeIs('admin.bookings.*') || request()->routeIs('admin.fixedpackage.bookings.*') || request()->routeIs('admin.custom-packages.*') ? 'true' : 'false' }}">
                 <i class="fas fa-calendar-check"></i>
                 <span class="nav-label">Bookings</span>
             </a>
-            <ul class="dropdown-menu collapse {{ request()->routeIs('admin.bookings.*') || request()->routeIs('admin.fixedpackage.bookings.*') ? 'show' : '' }}" id="bookingsSubmenu">
+            <ul class="dropdown-menu collapse {{ request()->routeIs('admin.bookings.*') || request()->routeIs('admin.fixedpackage.bookings.*') || request()->routeIs('admin.custom-packages.*') ? 'show' : '' }}" id="bookingsSubmenu">
                 <li><a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.index') ? 'active' : '' }}">Individual Place</a></li>
                 <li><a href="{{ route('admin.fixedpackage.bookings.index') }}" class="{{ request()->routeIs('admin.fixedpackage.bookings.*') ? 'active' : '' }}">Fixed Package Booking</a></li>
-                <li><a href="{{ route('admin.bookings.index') }}" class="{{ request()->routeIs('admin.bookings.index') && request()->query('type') == 'custom' ? 'active' : '' }}">Custom Package Booking</a></li>
+                <li><a href="{{ route('admin.custom-packages.index') }}" class="{{ request()->routeIs('admin.custom-packages.*') ? 'active' : '' }}">Custom Package Booking</a></li>
             </ul>
         </li>
         <li>
