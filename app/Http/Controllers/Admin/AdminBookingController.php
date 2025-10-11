@@ -31,7 +31,7 @@ class AdminBookingController extends Controller
                 'time' => $booking->time,
                 'vehicle_type' => $booking->vehicle ? $booking->vehicle->vehicle_type : 'N/A',
                 'guider' => $booking->guider ?? 'No',
-                'total_price' => number_format($booking->total_price, 2),
+                'total_price' => $booking->total_price, // Return as numeric value, not formatted string
                 'status' => $booking->status,
                 'created_at' => $booking->created_at->format('Y-m-d H:i:s'),
             ];

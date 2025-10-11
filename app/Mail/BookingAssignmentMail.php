@@ -29,3 +29,4 @@ class BookingAssignmentMail extends Mailable
                     ->view('emails.booking-assignment');
     }
 }
+
