@@ -39,7 +39,9 @@ class FixedPackageBookingController extends Controller
     public function edit($id)
     {
         $booking = FixedBooking::with(['user', 'package'])->findOrFail($id);
-        return view('admin.bookings.fixedpackages_bookings.edit', compact('booking'));
+        $vehicles = Vehicle::all();
+        $guiders = Guider::all();
+        return view('admin.bookings.fixedpackages_bookings.edit', compact('booking', 'vehicles', 'guiders'));
     }
 
     public function update(Request $request, $id)
@@ -58,14 +60,74 @@ class FixedPackageBookingController extends Controller
                 'participants' => 'required|integer|min:1',
                 'total_price' => 'required|numeric|min:0',
                 'status' => 'required|in:pending,confirmed,cancelled,completed',
+                'vehicle_id' => 'nullable|exists:vehicles,id',
+                'guider_id' => 'nullable|exists:guiders,id',
             ]);
+
+            // Check if guider was assigned/unassigned
+            $oldGuiderId = $booking->guider_id;
+            $newGuiderId = $validated['guider_id'] ?? null;
+
+            // Check if vehicle was assigned/unassigned
+            $oldVehicleId = $booking->vehicle_id;
+            $newVehicleId = $validated['vehicle_id'] ?? null;
 
             // Update the booking
             $booking->update($validated);
 
+            // Send email notification if guider was assigned or changed
+            if ($oldGuiderId != $newGuiderId) {
+                Log::info('Sending guider assignment email for booking ID: ' . $booking->id);
+                $this->sendGuiderAssignmentEmail($booking, $newGuiderId, $oldGuiderId, $newVehicleId);
+            } else {
+                Log::info('No guider change detected for booking ID: ' . $booking->id);
+            }
+
             return redirect()->route('admin.fixedpackage.bookings.index')->with('success', 'Booking updated successfully');
         } catch (\Exception $e) {
+            Log::error('Error updating booking: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Error updating booking: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    private function sendGuiderAssignmentEmail($booking, $newGuiderId, $oldGuiderId, $vehicleId)
+    {
+        try {
+            Log::info('Preparing to send emails for booking ID: ' . $booking->id);
+
+            // Load the vehicle and guider models
+            $vehicle = $vehicleId ? Vehicle::find($vehicleId) : null;
+            $newGuider = $newGuiderId ? Guider::find($newGuiderId) : null;
+            $oldGuider = $oldGuiderId ? Guider::find($oldGuiderId) : null;
+
+            Log::info('Vehicle: ' . ($vehicle ? $vehicle->id : 'null'));
+            Log::info('New Guider: ' . ($newGuider ? $newGuider->id : 'null'));
+            Log::info('Old Guider: ' . ($oldGuider ? $oldGuider->id : 'null'));
+
+            // Notify the user
+            if ($booking->email) {
+                Log::info('Sending email to user: ' . $booking->email);
+                Mail::to($booking->email)->send(new BookingAssignmentMail($booking, $newGuider, $vehicle, 'user'));
+                Log::info('Email sent to user successfully');
+            }
+
+            // Notify the new guider if assigned
+            if ($newGuiderId && $newGuider && $newGuider->email) {
+                Log::info('Sending email to new guider: ' . $newGuider->email);
+                Mail::to($newGuider->email)->send(new BookingAssignmentMail($booking, $newGuider, $vehicle, 'guider'));
+                Log::info('Email sent to new guider successfully');
+            }
+
+            // Notify the old guider if unassigned
+            if ($oldGuiderId && $oldGuider && $oldGuider->email) {
+                Log::info('Sending email to old guider: ' . $oldGuider->email);
+                Mail::to($oldGuider->email)->send(new BookingAssignmentMail($booking, $oldGuider, $vehicle, 'unassigned'));
+                Log::info('Email sent to old guider successfully');
+            }
+
+            Log::info('All emails processed for booking ID: ' . $booking->id);
+        } catch (\Exception $e) {
+            Log::error('Error sending booking assignment email: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine());
         }
     }
 

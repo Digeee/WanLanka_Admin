@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class FixedBooking extends Model
 {
     protected $table = 'fixed_bookings';
-    
+
     // Specify the connection to use for the user database
     protected $connection = 'mysql';
-    
+
     protected $fillable = [
         'user_id',
         'package_id',
@@ -24,7 +24,9 @@ class FixedBooking extends Model
         'receipt',
         'participants',
         'total_price',
-        'status'
+        'status',
+        'vehicle_id',
+        'guider_id'
     ];
 
     protected $casts = [
