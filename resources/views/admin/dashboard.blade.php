@@ -20,6 +20,21 @@
         --shadow-2:0 22px 50px rgba(0,0,0,.45);
     }
 
+    /* ====== Glass Morphism Enhancements ====== */
+    .glass-effect {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    }
+
+    [data-theme="dark"] .glass-effect {
+        background: rgba(15, 23, 42, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    }
+
     /* ====== Page Shell ====== */
     .shell{ max-width:1400px; margin:28px auto 80px; padding:0 20px; color:var(--text); }
     body{
@@ -34,6 +49,12 @@
         background: linear-gradient(180deg, color-mix(in oklab, var(--panel), transparent 4%), transparent);
         border:1px solid var(--border); border-radius:18px; padding:14px 18px; box-shadow: var(--shadow-1);
         overflow:hidden;
+        /* Enhanced glass effect */
+        background: rgba(255, 255, 255, 0.35);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
     }
     [data-theme="dark"] .page-header{
         background:
@@ -41,6 +62,10 @@
           linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
         border:1px solid var(--ring);
         box-shadow:0 18px 50px rgba(2,6,23,.55), inset 0 1px 0 rgba(255,255,255,.04);
+        /* Enhanced dark glass effect */
+        background: rgba(15, 23, 42, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
     }
     .title{ margin:0; font-size:26px; font-weight:800; letter-spacing:.2px; }
     [data-theme="dark"] .title{ color:#f8fafc; text-shadow:0 1px 0 rgba(0,0,0,.45); }
@@ -69,6 +94,9 @@
         box-shadow:var(--shadow-1);
         transition:background-position .6s ease,box-shadow .25s ease,color .25s ease,border-color .25s ease, transform .06s ease;
         overflow:hidden; backface-visibility:hidden; transform:translateZ(0);
+        /* Glass effect for buttons */
+        backdrop-filter: blur(6px) saturate(180%);
+        -webkit-backdrop-filter: blur(6px) saturate(180%);
     }
     .btn:hover{ background-position:120% 0,0 0,0 0; box-shadow:var(--shadow-2); }
     .btn:active{ transform:translateY(1px); }
@@ -106,6 +134,12 @@
         box-shadow:var(--shadow-1);
         transition:transform .08s ease, box-shadow .25s ease;
         display:flex; flex-direction:column; justify-content:space-between;
+        /* Enhanced glass effect */
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
     }
     .stat:hover{ transform: translateY(-2px); box-shadow:var(--shadow-2); }
     .stat h3{ margin:0 0 8px; font-size:13px; letter-spacing:.4px; text-transform:uppercase; color:var(--muted); font-weight:800; }
@@ -129,6 +163,10 @@
           radial-gradient(260px 140px at -10% -30%, rgba(96,165,250,.18), transparent 60%),
           linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
         box-shadow:0 12px 38px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
+        /* Enhanced dark glass effect */
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
     }
     [data-theme="dark"] .t-green{
         background: radial-gradient(260px 140px at -10% -30%, rgba(52,211,153,.18), transparent 60%), linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
@@ -167,6 +205,12 @@
         padding: 20px;
         box-shadow: var(--shadow-1);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        /* Enhanced glass effect */
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
     }
     .panel:hover {
         transform: translateY(-2px);
@@ -176,6 +220,10 @@
         border-color: var(--ring);
         background: linear-gradient(180deg, #0f172a 0%, #0b1220 100%);
         box-shadow: 0 12px 38px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.03);
+        /* Enhanced dark glass effect */
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
     }
 
     .panel-header {
@@ -202,14 +250,24 @@
         border-bottom: 1px solid var(--border);
         display: flex;
         gap: 12px;
+        /* Glass effect for items */
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 8px;
+        backdrop-filter: blur(6px) saturate(180%);
+        -webkit-backdrop-filter: blur(6px) saturate(180%);
     }
     [data-theme="dark"] .activity-item,
     [data-theme="dark"] .notification-item {
         border-color: var(--ring);
+        background: rgba(15, 23, 42, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }
     .activity-item:last-child,
     .notification-item:last-child {
         border: none;
+        margin-bottom: 0;
     }
     .activity-icon, .notification-icon {
         width: 36px;
@@ -219,6 +277,16 @@
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
+        /* Glass effect for icons */
+        background: rgba(255, 255, 255, 0.35);
+        backdrop-filter: blur(6px) saturate(180%);
+        -webkit-backdrop-filter: blur(6px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+    [data-theme="dark"] .activity-icon,
+    [data-theme="dark"] .notification-icon {
+        background: rgba(15, 23, 42, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .activity-text, .notification-text {
         flex: 1;
@@ -244,6 +312,9 @@
         padding: 2px 6px;
         border-radius: 10px;
         font-weight: 800;
+        /* Glass effect for badge */
+        backdrop-filter: blur(4px) saturate(180%);
+        -webkit-backdrop-filter: blur(4px) saturate(180%);
     }
     .notification-dismiss {
         background: none;
@@ -254,10 +325,25 @@
         margin-left: 8px;
         opacity: 0.7;
         transition: opacity 0.2s;
+        /* Glass effect for dismiss button */
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px) saturate(180%);
+        -webkit-backdrop-filter: blur(4px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
     }
     .notification-dismiss:hover {
         opacity: 1;
         color: var(--danger);
+        background: rgba(255, 255, 255, 0.25);
+    }
+    [data-theme="dark"] .notification-dismiss:hover {
+        background: rgba(15, 23, 42, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     /* ====== Quick Actions ====== */
@@ -277,11 +363,23 @@
         cursor: pointer;
         text-decoration: none;
         color: var(--text);
+        /* Enhanced glass effect */
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
     }
     .action-card:hover {
         transform: translateY(-3px);
         box-shadow: var(--shadow-2);
         border-color: var(--accent);
+        /* Enhanced hover effect */
+        background: rgba(255, 255, 255, 0.65);
+    }
+    [data-theme="dark"] .action-card:hover {
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(96, 165, 250, 0.5);
     }
     .action-icon {
         font-size: 24px;
@@ -307,6 +405,15 @@
         border-radius: 3px;
         overflow: hidden;
         margin-top: 8px;
+        /* Glass effect for progress bar container */
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(4px) saturate(180%);
+        -webkit-backdrop-filter: blur(4px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    [data-theme="dark"] .progress-bar {
+        background: rgba(15, 23, 42, 0.35);
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }
     .progress-fill {
         height: 100%;
@@ -361,6 +468,17 @@
         padding: 12px;
         text-align: center;
         box-shadow: var(--shadow-1);
+        /* Glass effect for status cards */
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    }
+    [data-theme="dark"] .booking-status-card {
+        background: rgba(15, 23, 42, 0.65);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
     }
     .booking-status-count {
         font-size: 24px;

@@ -207,15 +207,7 @@
                     <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="password" class="form-label">Password (leave blank to keep unchanged)</label>
-                    <input type="password" class="form-control" id="password" name="password">
-                </div>
 
-                <div class="form-group">
-                    <label for="password_confirmation" class="form-label">Confirm Password</label>
-                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
-                </div>
 
                 <div class="form-group">
                     <label for="dob" class="form-label">Date of Birth</label>
